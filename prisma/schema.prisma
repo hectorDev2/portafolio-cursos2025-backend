@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Modelo para los Usuarios
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // En una aplicación real, usarías hashing para contraseñas
+  name      String?
+  role      Role     @default(DOCENTE) // Administrador, Docente, Evaluador [cite: 5]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relación con Portafolio (si un docente crea portafolios)
+  portfolios Portfolio[]
+  // Relación con Feedback (si un evaluador deja feedback)
+  feedbacks  Feedback[]
+}
+
+// Enum para los roles de usuario [cite: 5]
+enum Role {
+  ADMINISTRADOR
+  DOCENTE
+  EVALUADOR
+}
+
+// Modelo para Portafolio de Cursos
+model Portfolio {
+  id          String    @id @default(uuid())
+  title       String    // Título del portafolio, e.g., "Portafolio de Metodologías de Desarrollo de Software" [cite: 1]
+  description String?   // Descripción del portafolio
+  semester    String    // Semestre al que pertenece el portafolio (ej. "2025-1") [cite: 6]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relación con el Docente que creó el portafolio
+  docenteId   String
+  docente     User      @relation(fields: [docenteId], references: [id])
+
+  // Relación con los Documentos dentro del portafolio
+  documents   Document[]
+  // Relación con el Feedback recibido por el portafolio
+  feedbacks   Feedback[]
+}
+
+// Modelo para los Documentos dentro del Portafolio
+model Document {
+  id           String    @id @default(uuid())
+  fileName     String
+  fileUrl      String    // URL del archivo almacenado (ej. en la nube) [cite: 8]
+  fileSizeMB   Float     // Tamaño del archivo en MB (límite de 5 MB por documento) [cite: 3]
+  fileType     String    // Tipo de documento (e.g., "sílabo", "diapositivas", "guía", "práctica", "examen", "trabajo estudiantil") [cite: 2]
+  category     String?   // Categoría para trabajos estudiantiles (e.g., "excelente", "pobre") [cite: 2]
+  uploadedAt   DateTime  @default(now())
+  
+  // Relación con el Portafolio al que pertenece el documento
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+}
+
+// Modelo para el Feedback (retroalimentación) de los evaluadores [cite: 7]
+model Feedback {
+  id           String    @id @default(uuid())
+  comment      String
+  // Se puede añadir una calificación si es necesario
+  createdAt    DateTime  @default(now())
+
+  // Relación con el Evaluador que proporcionó el feedback
+  evaluatorId  String
+  evaluator    User @relation(fields: [evaluatorId], references: [id])
+
+  // Relación con el Portafolio al que se le dio feedback
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+}
