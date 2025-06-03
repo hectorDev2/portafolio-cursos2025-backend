@@ -10,10 +10,17 @@ export class UserService {
     return users;
   }
 
-  getUserById(id: string) {
-    return {
-      message: `This action returns user with id ${id}`,
-      userId: +id,
-    };
+  async create(createUserDto: any): Promise<any> {
+    const user = await this.prisma.user.create({
+      data: createUserDto,
+    });
+    return user;
+  }
+
+  async getUserById(id: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    return user;
   }
 }

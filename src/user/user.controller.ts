@@ -1,5 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { UserService } from './user.service';
+import { CreateUserDto } from './dto/CreateUserDto.dto';
 
 @Controller('user')
 export class UserController {
@@ -10,11 +19,14 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
+  @Post()
+  @HttpCode(HttpStatus.CREATED) // Devuelve un código de estado 201 Created
+  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    return this.userService.create(createUserDto);
+  }
+
   @Get(':id')
   getUserById(@Param('id') id: string) {
-    return {
-      message: `This action returns user with id ${id}`,
-      userId: +id,
-    };
+    return this.userService.getUserById(id);
   }
 }
