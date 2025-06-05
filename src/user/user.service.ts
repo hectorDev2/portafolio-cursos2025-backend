@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/CreateUserDto.dto';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class UserService {
@@ -78,8 +79,21 @@ export class UserService {
   }
 
   async deleteUser(id: string): Promise<void> {
-    await this.prisma.user.delete({
-      where: { id },
-    });
+    try {
+      await this.prisma.user.delete({
+        where: { id },
+      });
+    } catch (error) {
+      // Maneja el error de Prisma si el registro no fue encontrado para eliminar (P2025)
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(
+            `Usuario con ID "${id}" no encontrado para eliminar.`,
+          );
+        }
+      }
+      // Si es otro tipo de error de Prisma o un error desconocido, relanzarlo
+      throw error;
+    }
   }
 }
