@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from './dto/CreateUserDto.dto';
+import { UpdateUserDto } from './dto/UpdateUserDto.dto';
 
 @Injectable()
 export class UserService {
@@ -11,7 +13,7 @@ export class UserService {
     return users;
   }
 
-  async create(createUserDto: any): Promise<any> {
+  async create(createUserDto: CreateUserDto): Promise<UpdateUserDto> {
     const { password, ...userData } = createUserDto; // Extrae la contraseña del DTO
 
     // Define el número de rondas de salado (salt rounds).
@@ -31,23 +33,48 @@ export class UserService {
     // Esto es una buena práctica para no exponer la contraseña hasheada innecesariamente
     // en la respuesta de la API.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...result } = user; // Renombra 'password' a _ y extrae el resto
+    const { password: _, ...rest } = user; // Renombra 'password' a _ y extrae el resto
+    // Convert name: null to name: undefined for compatibility with UpdateUserDto
+    const result: UpdateUserDto = {
+      ...rest,
+      name: rest.name === null ? undefined : rest.name,
+    };
     return result;
   }
 
-  async updateUser(id: string, updateUserDto: any): Promise<any> {
+  async updateUser(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateUserDto> {
     const user = await this.prisma.user.update({
       where: { id },
       data: updateUserDto,
     });
-    return user;
+
+    // Convert name: null to name: undefined for compatibility with UpdateUserDto
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...rest } = user;
+    const result: UpdateUserDto = {
+      ...rest,
+      name: rest.name === null ? undefined : rest.name,
+    };
+    return result;
   }
 
   async getUserById(id: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
-    return user;
+
+    // Si el usuario no es encontrado, lanzar una excepción NotFoundException
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID "${id}" no encontrado.`);
+    }
+
+    // Omitir la contraseña del objeto de usuario antes de devolverlo
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...result } = user;
+    return result;
   }
 
   async deleteUser(id: string): Promise<void> {
