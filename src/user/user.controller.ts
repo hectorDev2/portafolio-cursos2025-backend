@@ -31,6 +31,11 @@ export class UserController {
   getAllUsers() {
     return this.userService.getAllUsers();
   }
+  //! READ by ID
+  @Get(':id')
+  getUserById(@Param('id') id: string) {
+    return this.userService.getUserById(id);
+  }
   //! UPDATE
   @Post(':id')
   @HttpCode(HttpStatus.OK) // Devuelve un código de estado 200 OK
@@ -41,12 +46,7 @@ export class UserController {
     return this.userService.updateUser(id, updateUserDto);
   }
 
-  //! READ by ID
-  @Get(':id')
-  getUserById(@Param('id') id: string) {
-    return this.userService.getUserById(id);
-  }
-
+  //! DELETE
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT) // Devuelve un código de estado 204 No Content
   async deleteUser(@Param('id') id: string): Promise<void> {
