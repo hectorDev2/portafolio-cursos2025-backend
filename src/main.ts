@@ -20,7 +20,7 @@ async function bootstrap() {
       // como @IsEmail y otros funcionen correctamente.
       transform: true,
       // Opcional: Si quieres mensajes de error más detallados de las validaciones,
-      // puedes deshabilitar esta opción para el desarrollo.
+      // puedes deshabilitar esta opción para e``l desarrollo.
       // Siempre es mejor dejarla en true para producción por seguridad.
       disableErrorMessages: false,
     }),
