@@ -2,12 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private prisma: PrismaService,
+    private readonly jwtService: JwtService,
   ) {}
   async register(name: string, email: string, password: string): Promise<any> {
     // 1. Check if user already exists
@@ -47,10 +49,17 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new BadRequestException('Invalid email or password.');
     }
+    console.log('Password is valid, generating JWT');
+    // 3. Generate a JWT token
+    const token = this.jwtService.sign({ userId: user.id, email: user.email });
+    console.log('JWT generated:', token);
 
-    // 3. Return the user data (excluding password)
+    // 4. Return the user data and token (excluding password)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user; // Destructure to omit password
+    result.token = token; // Add the token to the result
+    console.log('Returning user data without password:', result);
+
     return result;
   }
 }
