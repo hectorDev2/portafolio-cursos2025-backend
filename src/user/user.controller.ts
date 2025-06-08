@@ -10,10 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/CreateUserDto.dto';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/auth/roles.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('user')
@@ -21,14 +20,6 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   //? CRUD
-  //* Create, Read, Update, Delete
-
-  //! CREATE
-  @Post()
-  @HttpCode(HttpStatus.CREATED) // Devuelve un código de estado 201 Created
-  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
-    return this.userService.create(createUserDto);
-  }
 
   //! READ
   @UseGuards(AuthGuard('jwt'), RolesGuard) // Primero autentica con JWT, luego verifica roles
