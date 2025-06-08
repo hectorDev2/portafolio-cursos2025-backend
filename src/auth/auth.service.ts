@@ -37,29 +37,26 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<any> {
     // 1. Find the user by email
     const user = await this.userService.findByEmail(email);
-    console.log(user.password, 'user found in signIn method');
 
+    console.log(user, 'user found in auth service');
     if (!user) {
       throw new BadRequestException('Invalid email or password.');
     }
 
-    console.log(password, ' provided in signIn method');
     // 2. Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new BadRequestException('Invalid email or password.');
     }
-    console.log('Password is valid, generating JWT');
-    // 3. Generate a JWT token
-    const token = this.jwtService.sign({ userId: user.id, email: user.email });
-    console.log('JWT generated:', token);
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    };
 
-    // 4. Return the user data and token (excluding password)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...result } = user; // Destructure to omit password
-    result.token = token; // Add the token to the result
-    console.log('Returning user data without password:', result);
-
-    return result;
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }

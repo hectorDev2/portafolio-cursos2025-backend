@@ -7,9 +7,20 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
+
+enum UserRole {
+  ADMINISTRADOR = 'ADMIN',
+  DOCENTE = 'DOCENTE',
+  ESTUDIANTE = 'ESTUDIANTE',
+  INVITADO = 'INVITADO',
+}
 
 @Controller('user')
 export class UserController {
@@ -18,6 +29,8 @@ export class UserController {
   //? CRUD
 
   //! READ
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMINISTRADOR)
   @Get()
   getAllUsers() {
     return this.userService.getAllUsers();
