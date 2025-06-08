@@ -16,10 +16,9 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 
 enum UserRole {
-  ADMINISTRADOR = 'ADMIN',
+  ADMINISTRADOR = 'ADMINISTRADOR',
   DOCENTE = 'DOCENTE',
-  ESTUDIANTE = 'ESTUDIANTE',
-  INVITADO = 'INVITADO',
+  ESTUDIANTE = 'EVALUADOR',
 }
 
 @Controller('user')
@@ -30,17 +29,21 @@ export class UserController {
 
   //! READ
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMINISTRADOR)
+  @Roles(UserRole.DOCENTE)
   @Get()
   getAllUsers() {
     return this.userService.getAllUsers();
   }
   //! READ by ID
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.DOCENTE)
   @Get(':id')
   getUserById(@Param('id') id: string) {
     return this.userService.getUserById(id);
   }
   //! UPDATE
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.DOCENTE)
   @Post(':id')
   @HttpCode(HttpStatus.OK) // Devuelve un código de estado 200 OK
   async updateUser(
@@ -51,6 +54,8 @@ export class UserController {
   }
 
   //! DELETE
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.DOCENTE)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT) // Devuelve un código de estado 204 No Content
   async deleteUser(@Param('id') id: string): Promise<void> {

@@ -15,6 +15,8 @@ CREATE TABLE "Portfolio" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "semester" TEXT NOT NULL,
+    "courseName" TEXT NOT NULL,
+    "courseCode" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "docenteId" TEXT NOT NULL,
