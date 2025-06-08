@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from './dto/CreateUserDto.dto';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
@@ -19,35 +17,6 @@ export class UserService {
       where: { email },
     });
     return user;
-  }
-
-  async create(createUserDto: CreateUserDto): Promise<UpdateUserDto> {
-    const { password, ...userData } = createUserDto; // Extrae la contraseña del DTO
-
-    // Define el número de rondas de salado (salt rounds).
-    // Un valor más alto es más seguro pero más lento. 10-12 es un buen punto de partida.
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds); // Hashea la contraseña
-
-    // Crea un nuevo objeto con los datos del usuario y la contraseña hasheada
-    const user = await this.prisma.user.create({
-      data: {
-        ...userData, // Resto de los datos del usuario (name, email, etc.)
-        password: hashedPassword, // La contraseña hasheada
-      },
-    });
-
-    // Opcional: Eliminar la contraseña del objeto de usuario antes de devolverlo
-    // Esto es una buena práctica para no exponer la contraseña hasheada innecesariamente
-    // en la respuesta de la API.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...rest } = user; // Renombra 'password' a _ y extrae el resto
-    // Convert name: null to name: undefined for compatibility with UpdateUserDto
-    const result: UpdateUserDto = {
-      ...rest,
-      name: rest.name === null ? undefined : rest.name,
-    };
-    return result;
   }
 
   async updateUser(

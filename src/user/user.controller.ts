@@ -7,13 +7,9 @@ import {
   HttpStatus,
   Param,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('user')
 export class UserController {
@@ -22,8 +18,6 @@ export class UserController {
   //? CRUD
 
   //! READ
-  @UseGuards(AuthGuard('jwt'), RolesGuard) // Primero autentica con JWT, luego verifica roles
-  @Roles('ADMIN') // Solo usuarios con rol 'ADMIN' pueden acceder
   @Get()
   getAllUsers() {
     return this.userService.getAllUsers();
