@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePortafolioDto } from './dtos/create-portafolio.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdatePortafolioDto } from './dtos/update-portafolio.dto';
 
 @Injectable()
 export class PortafolioDeCursosService {
@@ -30,5 +31,31 @@ export class PortafolioDeCursosService {
     });
   }
 
-  // Otros métodos como findAll, findOne, update, delete, etc. pueden ser implementados aquí.
+  async update(
+    id: string,
+    updatePortafolioDto: UpdatePortafolioDto,
+    userId: string, // Puedes usar el userId si necesitas verificar permisos
+  ) {
+    // Lógica para actualizar un portafolio específico por su ID
+
+    return this.prisma.portfolio.update({
+      where: { id },
+      data: {
+        ...updatePortafolioDto,
+        docenteId: userId, // Asegúrate de que el docente que actualiza es el propietario
+      },
+    });
+  }
+  async remove(id: string) {
+    // Lógica para eliminar un portafolio específico por su ID
+    return this.prisma.portfolio.delete({
+      where: { id },
+    });
+  }
+  async findByDocenteId(docenteId: string) {
+    // Lógica para obtener todos los portafolios de un docente específico
+    return this.prisma.portfolio.findMany({
+      where: { docenteId },
+    });
+  }
 }

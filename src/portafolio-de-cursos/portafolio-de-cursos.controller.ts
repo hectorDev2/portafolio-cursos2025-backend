@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -19,6 +20,7 @@ import { CreatePortafolioDto } from './dtos/create-portafolio.dto';
 
 // Define una interfaz para extender el objeto Request de Express con la información de usuario
 import { Request } from 'express';
+import { UpdatePortafolioDto } from './dtos/update-portafolio.dto';
 interface RequestWithUser extends Request {
   user: {
     userId: string; // Asegúrate de que esto coincida con el tipo 'sub' en tu JwtPayload
@@ -81,24 +83,17 @@ export class PortafolioDeCursosController {
     return portfolio;
   }
 
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: string,
-  //   @Body() updatePortafolioDto: UpdatePortafolioDto,
-  //   @Req() req: RequestWithUser,
-  // ) {
-  //   // La verificación de propiedad se maneja dentro del servicio
-  //   return this.portafolioDeCursosService.update(
-  //     id,
-  //     updatePortafolioDto,
-  //     req.user.userId,
-  //   );
-  // }
-
-  // @Delete(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT) // Devuelve un 204 No Content en caso de eliminación exitosa
-  // async remove(@Param('id') id: string, @Req() req: RequestWithUser) {
-  //   // La verificación de propiedad se maneja dentro del servicio
-  //   await this.portafolioDeCursosService.remove(id, req.user.userId);
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePortafolioDto: UpdatePortafolioDto,
+    @Req() req: RequestWithUser,
+  ) {
+    // La verificación de propiedad se maneja dentro del servicio
+    return this.portafolioDeCursosService.update(
+      id,
+      updatePortafolioDto,
+      req.user.userId,
+    );
+  }
 }
