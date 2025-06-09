@@ -28,15 +28,16 @@ Desarrollar un sistema de información para gestionar el portafolio de cursos, a
 ## Estructura del Proyecto
 
 Organización modular típica de NestJS:
+```tree
 src/
-├── auth/
-├── users/
-├── portfolios/
-├── documents/
-├── shared/
-├── main.ts
-├── app.module.ts
-├── prisma/
+├── auth/            # Módulo de autenticación (login, registro, JWT strategy, guards)
+├── users/           # Módulo de gestión de usuarios (creación, roles, etc.)
+├── portfolios/      # Módulo para la gestión de portafolios (CRUD de portafolios)
+├── documents/       # Módulo para la subida y gestión de documentos (subida, eliminación, etc.)
+├── shared/          # Módulos o utilidades compartidas (DTOs, interfaces, helpers, pipes, guards generales)
+├── main.ts          # Archivo de entrada de la aplicación
+├── app.module.ts    # Módulo raíz de la aplicación
+├── prisma/          # Directorio de Prisma (schema.prisma, migrations)
 ├── ...
 ## Configuración y Ejecución
 
