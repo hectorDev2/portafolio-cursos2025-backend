@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// Try Prisma Accelerate: https://https://www.prisma.io/accelerate/
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -13,13 +12,21 @@ generator client {
   provider = "prisma-client-js"
 }
   
+// Enum para los roles de usuario
+enum Role {
+  ADMINISTRADOR
+  DOCENTE
+  EVALUADOR
+  // ESTUDIANTE - Este rol ha sido removido según tu indicación
+}
+
 // Modelo para los Usuarios
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String   // ¡Importante! En una aplicación real, siempre almacena contraseñas hasheadas.
   name      String?
-  role      Role     @default(DOCENTE) // Administrador, Docente, Evaluador
+  role      Role     @default(DOCENTE) 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -28,13 +35,7 @@ model User {
   portfolios Portfolio[]
   // Un usuario (evaluador) puede dejar muchos feedbacks
   feedbacks  Feedback[]
-}
-
-// Enum para los roles de usuario
-enum Role {
-  ADMINISTRADOR
-  DOCENTE
-  EVALUADOR
+  // studentWorks MuestraTrabajoEstudiantil[] - Relación removida ya que el rol ESTUDIANTE no existe
 }
 
 // Modelo para Portafolio de Cursos
@@ -44,53 +45,123 @@ model Portfolio {
   description String?   // Descripción general del portafolio
   semester    String    // Semestre al que pertenece el portafolio (ej. "2025-1")
   
-  // NUEVOS CAMPOS AÑADIDOS para la información del curso
+  // Información del curso a la que pertenece este portafolio
   courseName  String    // Nombre del curso (ej. "Metodologías de Desarrollo de Software")
   courseCode  String?   // Código del curso (ej. "INF-401")
 
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime @updatedAt
   
   // Relación con el Docente que creó el portafolio
   docenteId   String
   docente     User      @relation(fields: [docenteId], references: [id])
 
-  // Relaciones con los contenidos del portafolio:
-  // Un portafolio puede contener muchos documentos (sílabos, diapositivas, etc.)
-  documents   Document[]
-  // Un portafolio puede recibir múltiples feedbacks
+  // Nuevas relaciones con los tipos específicos de documentos
+  silabos                 Silabo[]
+  materialesDeEnsenanza   MaterialDeEnsenanza[]
+  asignaciones            Asignacion[]
+  examenes                Examen[]
+  muestrasDeTrabajo       MuestraTrabajoEstudiantil[] // Relación con el nuevo modelo
+  
+  // Relación con el Feedback recibido por el portafolio
   feedbacks   Feedback[]
 }
 
-// Modelo para los Documentos o Materiales dentro del Portafolio
-// Este modelo es flexible para almacenar diferentes tipos de contenido.
-model Document {
+// ====================================================================
+//                 MODELOS Y ENUMS ESPECÍFICOS
+// ====================================================================
+
+// Modelo para Sílabos
+model Silabo {
   id           String    @id @default(uuid())
-  fileName     String
-  fileUrl      String    // URL del archivo almacenado (ej. en almacenamiento en la nube)
-  fileSizeMB   Float     // Tamaño del archivo en MB (límite de 5 MB por documento)
-  
-  // Tipo específico del documento:
-  // Ejemplos: "silabo", "diapositiva", "guia", "practica", "lectura",
-  // "asignacion", "examen", "trabajo_estudiantil"
-  fileType     String    
-  
-  // Categoría específica para trabajos estudiantiles (e.g., "excelente", "pobre")
-  // Será nulo para otros tipos de documentos.
-  category     String?   
-  
+  version      String?   // Ej. "1.0", "Revisión A"
+  contentUrl   String    // URL del archivo del sílabo (PDF/Doc)
   uploadedAt   DateTime  @default(now())
-  
-  // Relación con el Portafolio al que pertenece el documento
+
+  // Relación con el Portafolio al que pertenece el sílabo
   portfolioId  String
   portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+}
+
+// Enum para el tipo de Material de Enseñanza
+enum MaterialType {
+  DIAPOSITIVA
+  GUIA
+  PRACTICA
+  LECTURA
+  OTRO
+}
+
+// Modelo para Materiales de Enseñanza
+model MaterialDeEnsenanza {
+  id           String       @id @default(uuid())
+  title        String
+  type         MaterialType // Tipo de material (usando el enum)
+  contentUrl   String       // URL del archivo del material
+  uploadedAt   DateTime     @default(now())
+
+  // Relación con el Portafolio al que pertenece el material
+  portfolioId  String
+  portfolio    Portfolio    @relation(fields: [portfolioId], references: [id])
+}
+
+// Modelo para Asignaciones
+model Asignacion {
+  id           String    @id @default(uuid())
+  title        String
+  description  String?
+  dueDate      DateTime? // Fecha límite de entrega
+  contentUrl   String?   // URL del archivo de la asignación (ej. PDF)
+  uploadedAt   DateTime  @default(now())
+
+  // Relación con el Portafolio al que pertenece la asignación
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+}
+
+// Modelo para Exámenes
+model Examen {
+  id           String    @id @default(uuid())
+  title        String
+  description  String?
+  examDate     DateTime? // Fecha del examen
+  contentUrl   String?   // URL del archivo del examen (ej. PDF)
+  uploadedAt   DateTime  @default(now())
+
+  // Relación con el Portafolio al que pertenece el examen
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+}
+
+// Enum para la calidad de los Trabajos Estudiantiles
+enum WorkQuality {
+  EXCELENTE
+  BUENO
+  REGULAR
+  POBRE
+}
+
+// Modelo para Muestras de Trabajo Estudiantil
+model MuestraTrabajoEstudiantil {
+  id             String      @id @default(uuid())
+  title          String
+  contentUrl     String      // URL al trabajo del estudiante
+  quality        WorkQuality // Calidad del trabajo (usando el enum)
+  uploadedAt     DateTime    @default(now())
+
+  // Relación con el Portafolio al que pertenece la muestra
+  portfolioId    String
+  portfolio      Portfolio   @relation(fields: [portfolioId], references: [id])
+
+  // Identificador del estudiante (no es una relación directa con el modelo User)
+  studentIdentifier String // Por ejemplo, el nombre, código o ID único del estudiante
 }
 
 // Modelo para el Feedback (retroalimentación) de los evaluadores
 model Feedback {
   id           String    @id @default(uuid())
   comment      String
-  // Puedes añadir un campo 'rating' (Int) si necesitas una calificación numérica.
+  // Se puede añadir una calificación si es necesario (ej. rating Int?)
   createdAt    DateTime  @default(now())
 
   // Relación con el Evaluador que proporcionó el feedback
