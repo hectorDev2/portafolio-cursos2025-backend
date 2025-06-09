@@ -39,6 +39,7 @@ src/
 ├── app.module.ts    # Módulo raíz de la aplicación
 ├── prisma/          # Directorio de Prisma (schema.prisma, migrations)
 ├── ...
+```
 ## Configuración y Ejecución
 
 ### Prerequisitos
