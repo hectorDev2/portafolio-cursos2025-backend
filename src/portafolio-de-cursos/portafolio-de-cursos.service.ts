@@ -23,6 +23,12 @@ export class PortafolioDeCursosService {
     // Lógica para obtener todos los portafolios del docente
     return { message: 'Lista de portafolios', userId };
   }
+  async findOne(id: string) {
+    // Lógica para obtener un portafolio específico por su ID
+    return this.prisma.portfolio.findUnique({
+      where: { id },
+    });
+  }
 
   // Otros métodos como findAll, findOne, update, delete, etc. pueden ser implementados aquí.
 }

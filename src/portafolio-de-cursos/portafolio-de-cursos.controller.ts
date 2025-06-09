@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -55,24 +57,29 @@ export class PortafolioDeCursosController {
     return this.portafolioDeCursosService.findAll(req.user.userId);
   }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
-  //   const portfolio = await this.portafolioDeCursosService.findOne(id);
+  @Get(':id')
+  async findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
+    const portfolio = await this.portafolioDeCursosService.findOne(id);
 
-  //   // Lógica para permitir que el ADMIN/EVALUADOR vea cualquier portafolio,
-  //   // pero el DOCENTE solo pueda ver el suyo.
-  //   if (
-  //     portfolio.docenteId !== req.user.userId &&
-  //     req.user.role !== UserRole.ADMINISTRADOR &&
-  //     req.user.role !== UserRole.EVALUADOR
-  //   ) {
-  //     throw new ForbiddenException(
-  //       'No tiene permiso para ver este portafolio.',
-  //     );
-  //   }
+    // Si no se encuentra el portafolio, lanza una excepción adecuada
+    if (!portfolio) {
+      throw new ForbiddenException('Portafolio no encontrado.');
+    }
 
-  //   return portfolio;
-  // }
+    // Lógica para permitir que el ADMIN/EVALUADOR vea cualquier portafolio,
+    // pero el DOCENTE solo pueda ver el suyo.
+    if (
+      portfolio.docenteId !== req.user.userId &&
+      req.user.role !== UserRole.ADMINISTRADOR &&
+      req.user.role !== UserRole.EVALUADOR
+    ) {
+      throw new ForbiddenException(
+        'No tiene permiso para ver este portafolio.',
+      );
+    }
+
+    return portfolio;
+  }
 
   // @Patch(':id')
   // async update(
