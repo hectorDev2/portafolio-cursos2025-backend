@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -48,11 +49,11 @@ export class PortafolioDeCursosController {
     );
   }
 
-  // @Get()
-  // // Un docente solo ve SUS propios portafolios
-  // async findAll(@Req() req: RequestWithUser) {
-  //   return this.portafolioDeCursosService.findAll(req.user.userId);
-  // }
+  @Get()
+  // Un docente solo ve SUS propios portafolios
+  async findAll(@Req() req: RequestWithUser) {
+    return this.portafolioDeCursosService.findAll(req.user.userId);
+  }
 
   // @Get(':id')
   // async findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
