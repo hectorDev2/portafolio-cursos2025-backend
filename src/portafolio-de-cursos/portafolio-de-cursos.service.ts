@@ -1,7 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePortafolioDto } from './dtos/create-portafolio.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdatePortafolioDto } from './dtos/update-portafolio.dto';
+import { UserRole } from './enum/UserRole';
+// Importa el enum UserRole desde su ubicación correcta
+
+//create UserRole enum si no lo tienes
 
 @Injectable()
 export class PortafolioDeCursosService {
@@ -22,13 +30,31 @@ export class PortafolioDeCursosService {
   }
   async findAll(userId: string) {
     // Lógica para obtener todos los portafolios del docente
-    return { message: 'Lista de portafolios', userId };
+    return this.prisma.portfolio.findMany({
+      where: { docenteId: userId }, // Filtra por el ID del docente
+    });
   }
-  async findOne(id: string) {
-    // Lógica para obtener un portafolio específico por su ID
-    return this.prisma.portfolio.findUnique({
+  async findOne(id: string, requestUserId: string, requestUserRole: UserRole) {
+    const portfolio = await this.prisma.portfolio.findUnique({
       where: { id },
     });
+
+    if (!portfolio) {
+      throw new NotFoundException('Portafolio no encontrado.');
+    }
+
+    // Lógica de autorización dentro del servicio
+    if (
+      portfolio.docenteId !== requestUserId &&
+      requestUserRole !== UserRole.ADMINISTRADOR &&
+      requestUserRole !== UserRole.EVALUADOR
+    ) {
+      throw new ForbiddenException(
+        'No tiene permiso para ver este portafolio.',
+      );
+    }
+
+    return portfolio;
   }
 
   async update(

@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -15,17 +14,16 @@ import { PortafolioDeCursosService } from './portafolio-de-cursos.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Ajusta la ruta si es necesario
 import { RolesGuard } from '../auth/roles.guard'; // Ajusta la ruta si es necesario
 import { Roles } from '../auth/decorators/roles.decorator'; // Ajusta la ruta si es necesario
-import { Role as UserRole } from '@prisma/client'; // Importa el enum Role de Prisma Client
 import { CreatePortafolioDto } from './dtos/create-portafolio.dto';
-
 // Define una interfaz para extender el objeto Request de Express con la información de usuario
 import { Request } from 'express';
 import { UpdatePortafolioDto } from './dtos/update-portafolio.dto';
+import { UserRole } from './enum/UserRole';
 interface RequestWithUser extends Request {
   user: {
     userId: string; // Asegúrate de que esto coincida con el tipo 'sub' en tu JwtPayload
     email: string;
-    role: UserRole; // Asegúrate de que esto coincida con el enum 'Role' de Prisma
+    role: UserRole; // Asegúrate de que esto coincida con el enum 'UserRole' de Prisma
     name?: string;
   };
 }
@@ -61,26 +59,11 @@ export class PortafolioDeCursosController {
 
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
-    const portfolio = await this.portafolioDeCursosService.findOne(id);
-
-    // Si no se encuentra el portafolio, lanza una excepción adecuada
-    if (!portfolio) {
-      throw new ForbiddenException('Portafolio no encontrado.');
-    }
-
-    // Lógica para permitir que el ADMIN/EVALUADOR vea cualquier portafolio,
-    // pero el DOCENTE solo pueda ver el suyo.
-    if (
-      portfolio.docenteId !== req.user.userId &&
-      req.user.role !== UserRole.ADMINISTRADOR &&
-      req.user.role !== UserRole.EVALUADOR
-    ) {
-      throw new ForbiddenException(
-        'No tiene permiso para ver este portafolio.',
-      );
-    }
-
-    return portfolio;
+    return this.portafolioDeCursosService.findOne(
+      id,
+      req.user.userId,
+      req.user.role,
+    );
   }
 
   @Patch(':id')
