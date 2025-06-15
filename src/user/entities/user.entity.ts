@@ -1,5 +1,6 @@
 // Importa el enum Role de Prisma Client, ya que es parte de la definición de tu entidad.
-import { Role } from '@prisma/client';
+
+import { Role } from 'src/enum/role';
 
 /**
  * @interface IUser

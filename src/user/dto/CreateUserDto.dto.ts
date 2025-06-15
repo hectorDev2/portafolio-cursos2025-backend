@@ -1,5 +1,3 @@
-// Importa el enum de Prisma
-import { Role } from '@prisma/client';
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,6 +6,7 @@ import {
   IsOptional,
   IsEnum,
 } from 'class-validator';
+import { Role } from 'src/enum/role';
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'El correo electrónico debe ser válido.' })

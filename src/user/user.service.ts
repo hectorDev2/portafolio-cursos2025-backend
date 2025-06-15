@@ -19,13 +19,14 @@ export class UserService {
     return user;
   }
 
-  async updateUser(
-    id: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UpdateUserDto> {
+  async updateUser(id: string, updateUserDto: any): Promise<UpdateUserDto> {
+    const { role, ...restDto } = updateUserDto;
     const user = await this.prisma.user.update({
       where: { id },
-      data: updateUserDto,
+      data: {
+        ...restDto,
+        ...(role !== undefined && { role: { set: role } }),
+      },
     });
 
     // Convert name: null to name: undefined for compatibility with UpdateUserDto
@@ -34,6 +35,7 @@ export class UserService {
     const result: UpdateUserDto = {
       ...rest,
       name: rest.name === null ? undefined : rest.name,
+      role: rest.role as UpdateUserDto['role'],
     };
     return result;
   }
