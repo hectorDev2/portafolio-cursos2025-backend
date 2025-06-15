@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreatePortafolioDto } from './dtos/create-portafolio.dto';
+import { CreatePortafolioDto } from './dto/create-portafolio.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdatePortafolioDto } from './dtos/update-portafolio.dto';
+import { UpdatePortafolioDto } from './dto/update-portafolio.dto';
 import { UserRole } from './enum/UserRole';
 // Importa el enum UserRole desde su ubicación correcta
 

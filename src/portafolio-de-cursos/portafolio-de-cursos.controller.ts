@@ -14,10 +14,10 @@ import { PortafolioDeCursosService } from './portafolio-de-cursos.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Ajusta la ruta si es necesario
 import { RolesGuard } from '../auth/roles.guard'; // Ajusta la ruta si es necesario
 import { Roles } from '../auth/decorators/roles.decorator'; // Ajusta la ruta si es necesario
-import { CreatePortafolioDto } from './dtos/create-portafolio.dto';
+import { CreatePortafolioDto } from './dto/create-portafolio.dto';
 // Define una interfaz para extender el objeto Request de Express con la información de usuario
 import { Request } from 'express';
-import { UpdatePortafolioDto } from './dtos/update-portafolio.dto';
+import { UpdatePortafolioDto } from './dto/update-portafolio.dto';
 import { UserRole } from './enum/UserRole';
 interface RequestWithUser extends Request {
   user: {

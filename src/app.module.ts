@@ -6,9 +6,10 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PortafolioDeCursosModule } from './portafolio-de-cursos/portafolio-de-cursos.module';
+import { SilaboModule } from './silabo/silabo.module';
 
 @Module({
-  imports: [UserModule, AuthModule, PortafolioDeCursosModule],
+  imports: [UserModule, AuthModule, PortafolioDeCursosModule, SilaboModule],
   controllers: [AppController],
   providers: [
     AppService,
