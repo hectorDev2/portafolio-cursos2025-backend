@@ -18,7 +18,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 enum UserRole {
   ADMINISTRADOR = 'ADMINISTRADOR',
   DOCENTE = 'DOCENTE',
-  ESTUDIANTE = 'EVALUADOR',
+  EVALUADOR = 'EVALUADOR',
 }
 
 @Controller('user')

@@ -20,6 +20,7 @@ enum Role {
   // ESTUDIANTE - Este rol ha sido removido según tu indicación
 }
 
+
 // Modelo para los Usuarios
 model User {
   id        String   @id @default(uuid())
