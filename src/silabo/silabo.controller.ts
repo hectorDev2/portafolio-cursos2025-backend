@@ -15,7 +15,6 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
-  FileTypeValidator,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -91,41 +90,25 @@ export class SilaboController {
   async remove(@Param('id') id: string, @Req() req: RequestWithUser) {
     await this.silaboService.remove(id, req.user.userId);
   }
-
   @Post('upload')
   @Roles(UserRole.DOCENTE)
   @UseInterceptors(
     FileInterceptor('silaboFile', {
-      // --- LOCAL STORAGE CONFIGURATION ---
       storage: diskStorage({
-        // Destination where files will be stored
-        destination: './uploads/silabos', // Create this folder in your project root
-        // Custom filename to avoid collisions
+        destination: './uploads/silabos',
         filename: (req, file, cb) => {
-          // Generate a unique filename using timestamp and original extension
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
           cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
         },
       }),
-      // --- END LOCAL STORAGE CONFIGURATION ---
-
-      // Keep the file size and type validators
       fileFilter: (req, file, cb) => {
-        // Manual file type validation because ParseFilePipe runs AFTER Multer accepts the file
-        const allowedMimes = [
-          'application/pdf',
-          'application/msword', // .doc
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-        ];
-        if (allowedMimes.includes(file.mimetype)) {
+        if (file.mimetype === 'application/pdf') {
           cb(null, true);
         } else {
           cb(
-            new Error(
-              'Invalid file type. Only PDFs and Word documents are allowed.',
-            ),
+            new Error('Invalid file type. Only PDF documents are allowed.'),
             false,
           );
         }
@@ -137,16 +120,14 @@ export class SilaboController {
   async uploadSilabo(
     @Body() uploadSilaboDto: UpdateSilaboDto,
     @UploadedFile(
-      // Keep ParseFilePipe for strict validation after Multer stores the file
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
-          // FileTypeValidator is less critical here as we have fileFilter in Multer config,
-          // but keeping it adds an extra layer of validation.
-          new FileTypeValidator({
-            fileType:
-              'application/pdf|application/msword|application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          }),
+          // new FileTypeValidator({
+          //   // --- MODIFIED: Allow only application/pdf using RegExp ---
+          //   fileType: /^application\/pdf$/,
+          //   // --- END MODIFIED ---
+          // }),
         ],
         fileIsRequired: true,
       }),
@@ -158,20 +139,48 @@ export class SilaboController {
       throw new Error('No file uploaded.');
     }
 
-    // The file is now saved locally, and `file.path` contains its path
-    // Example path: "uploads/silabos/silaboFile-1701234567-890123.pdf"
-    const localFilePath = file.path;
+    // // --- TEMPORARY TEST: Manually write the buffer ---
+    // const tempManualPath = `./uploads/silabos/temp_manual_${file.originalname}`;
+    // try {
+    //   fs.writeFileSync(tempManualPath, file.buffer);
+    //   console.log(`Manually written temp file: ${tempManualPath}`);
+    // } catch (writeError) {
+    //   console.error(`Error manually writing file: ${writeError.message}`);
+    // }
+    // // --- END TEMPORARY TEST ---
+    // Keep these logs; they confirm mimetype is correctly identified by Multer
+    console.log('--- Deep Debugging FileTypeValidator ---');
+    const expectedMimeRegex = /^application\/pdf$/;
+    console.log(`Actual MIME type received (raw): "${file.mimetype}"`);
+    console.log(`Length of actual MIME type: ${file.mimetype.length}`);
+    console.log(
+      `Expected MIME type regex (source): "${expectedMimeRegex.source}"`,
+    );
+    console.log(`Regex test result: ${expectedMimeRegex.test(file.mimetype)}`);
+    console.log(
+      `Direct string equality test: ${file.mimetype === 'application/pdf'}`,
+    );
+    console.log(
+      'Actual MIME type character codes:',
+      Array.from(file.mimetype).map((char) => char.charCodeAt(0)),
+    );
+    console.log(
+      'Expected "application/pdf" character codes:',
+      Array.from('application/pdf').map((char) => char.charCodeAt(0)),
+    );
+    console.log('--------------------------------------');
 
-    // Create a URL that the frontend can use to access the file
-    // Assumes your static files are served from /uploads
-    const contentUrl = `http://localhost:3000/${localFilePath}`; // Adjust base URL as needed
+    const localFilePath = file.path; // This is the path Multer has already written the file to
+    const contentUrl = `http://localhost:3000/${localFilePath}`; // Construct URL based on Multer's saved path
 
-    // No Cloudinary calls needed here anymore.
+    if (!uploadSilaboDto.portfolioId || !uploadSilaboDto.version) {
+      throw new Error('portfolioId and version are required.');
+    }
 
     const fullCreateSilaboDto = {
-      portfolioId: uploadSilaboDto.portfolioId ?? '',
-      version: uploadSilaboDto.version,
-      contentUrl: contentUrl, // Store the local URL
+      portfolioId: uploadSilaboDto.portfolioId as string,
+      version: uploadSilaboDto.version as string,
+      contentUrl: contentUrl,
     };
 
     return this.silaboService.create(fullCreateSilaboDto, req.user.userId);
