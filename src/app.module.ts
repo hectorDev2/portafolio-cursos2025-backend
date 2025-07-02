@@ -7,9 +7,19 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PortafolioDeCursosModule } from './portafolio-de-cursos/portafolio-de-cursos.module';
 import { SilaboModule } from './silabo/silabo.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [UserModule, AuthModule, PortafolioDeCursosModule, SilaboModule],
+  imports: [
+    MulterModule.register({
+      dest: './uploads', // Directory where files will be stored
+    }),
+    UserModule,
+    AuthModule,
+    PortafolioDeCursosModule,
+    SilaboModule,
+  ],
+
   controllers: [AppController],
   providers: [
     AppService,

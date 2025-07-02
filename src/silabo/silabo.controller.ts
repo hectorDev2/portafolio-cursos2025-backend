@@ -11,6 +11,8 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { SilaboService } from './silabo.service';
 import { CreateSilaboDto } from './dto/create-silabo.dto';
@@ -20,6 +22,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/portafolio-de-cursos/enum/UserRole';
 import { Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 // Define an interface to extend the Express Request object with user info
 interface RequestWithUser extends Request {
@@ -80,5 +83,18 @@ export class SilaboController {
   @HttpCode(HttpStatus.NO_CONTENT) // 204 No Content for successful deletion
   async remove(@Param('id') id: string, @Req() req: RequestWithUser) {
     await this.silaboService.remove(id, req.user.userId);
+  }
+
+  @Post('upload')
+  @Roles(UserRole.DOCENTE) // Only DOCENTES can upload files
+  @HttpCode(HttpStatus.CREATED) // 201 Created for successful upload
+  @UseInterceptors(FileInterceptor('file')) // Assuming you're using multer for file uploads
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log('File uploaded:', file);
+    return {
+      message: 'File uploaded successfully',
+    };
+    // Assuming the upload logic is handled in the service
+    // return this.silaboService.uploadFile(createSilaboDto, req.user.userId);
   }
 }
