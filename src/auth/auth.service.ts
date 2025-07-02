@@ -11,7 +11,12 @@ export class AuthService {
     private prisma: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
-  async register(name: string, email: string, password: string): Promise<any> {
+  async register(
+    name: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<any> {
     // 1. Check if user already exists
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
@@ -24,6 +29,7 @@ export class AuthService {
     const user = await this.prisma.user.create({
       data: {
         name,
+        lastName,
         email,
         password: hashedPassword, // Store the hashed password
       },
@@ -51,6 +57,7 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
+      lastName: user.lastName,
       name: user.name,
       role: user.role,
     };
