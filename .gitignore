@@ -3,6 +3,13 @@
 /node_modules
 /build
 
+#database local
+/prisma/dev.db
+/prisma/migrations
+
+#bun cache
+bun.lockb
+
 # Logs
 logs
 *.log
