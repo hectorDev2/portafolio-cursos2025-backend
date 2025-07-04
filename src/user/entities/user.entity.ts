@@ -13,6 +13,7 @@ export interface IUser {
   email: string;
   password: string; // Nota: En la aplicación, esta debería ser la contraseña hasheada.
   name?: string;
+  lastName?: string; // Si decides incluir el apellido en tu modelo.
   role: Role;
   createdAt: Date;
   updatedAt: Date;

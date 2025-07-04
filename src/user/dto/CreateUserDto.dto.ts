@@ -23,6 +23,9 @@ export class CreateUserDto {
   // No es necesario @IsNotEmpty() si ya es IsOptional() y solo se valida si está presente
   name?: string; // Es opcional en tu esquema Prisma
 
+  @IsOptional()
+  @IsString({ message: 'El apellido debe ser una cadena de texto.' })
+  lastName?: string; // Es opcional en tu esquema Prisma
   // Para el rol, generalmente solo un ADMINISTRADOR debería establecerlo
   @IsOptional()
   @IsEnum(Role, { message: 'Rol no válido.' })

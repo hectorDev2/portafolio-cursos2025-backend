@@ -4,12 +4,16 @@ import {
   IsString,
   MinLength,
   IsEnum,
+  Matches,
 } from 'class-validator';
 import { Role } from 'src/enum/role';
 
 export class UpdateUserDto {
   @IsOptional()
   @IsEmail({}, { message: 'El correo electrónico debe ser válido.' })
+  @Matches(/@unsaac\.edu\.pe$/, {
+    message: 'El correo electrónico debe ser del dominio @unsaac.edu.pe.',
+  })
   email?: string;
 
   @IsOptional()

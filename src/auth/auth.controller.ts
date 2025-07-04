@@ -23,6 +23,7 @@ export class AuthController {
     // Calls the register method from AuthService, passing the name, email, and password from the request body.
     return this.authService.register(
       registerDto.name,
+      registerDto.lastName,
       registerDto.email,
       registerDto.password,
     );
