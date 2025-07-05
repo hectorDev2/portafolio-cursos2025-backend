@@ -8,9 +8,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { CursoModule } from './curso/curso.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     UserModule,
     AuthModule,
     PortfolioModule,
@@ -18,6 +21,7 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
+    CursoModule,
   ],
   controllers: [AppController],
   providers: [
