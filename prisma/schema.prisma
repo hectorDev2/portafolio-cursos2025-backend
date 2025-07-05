@@ -20,7 +20,7 @@ enum Role {
 model User {
   id                String   @id @default(uuid())
   email             String   @unique
-  phoneNumber       String?
+  phoneNumber       String? @default("")
   address           String?
   dateOfBirth       DateTime?
   biography         String?
