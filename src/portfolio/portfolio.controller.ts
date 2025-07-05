@@ -15,18 +15,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
-import { Request } from 'express';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { UserRole } from './enum/UserRole';
-
-interface RequestWithUser extends Request {
-  user: {
-    userId: string;
-    email: string;
-    role: UserRole;
-    name?: string;
-  };
-}
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
@@ -38,31 +28,32 @@ export class PortfolioController {
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createPortfolioDto: CreatePortfolioDto,
-    @Req() req: RequestWithUser,
+    @Req() req: any,
   ) {
-    return this.portfolioService.create(createPortfolioDto, req.user.userId);
+    const userId = req.user?.userId;
+    return this.portfolioService.create(createPortfolioDto, userId);
   }
 
   @Get()
-  async findAll(@Req() req: RequestWithUser) {
-    return this.portfolioService.findAll(req.user.userId);
+  async findAll(@Req() req: any) {
+    const userId = req.user?.userId;
+    return this.portfolioService.findAll(userId);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
-    return this.portfolioService.findOne(id, req.user.userId, req.user.role);
+  async findOne(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user?.userId;
+    const userRole = req.user?.role;
+    return this.portfolioService.findOne(id, userId, userRole);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updatePortfolioDto: UpdatePortfolioDto,
-    @Req() req: RequestWithUser,
+    @Req() req: any,
   ) {
-    return this.portfolioService.update(
-      id,
-      updatePortfolioDto,
-      req.user.userId,
-    );
+    const userId = req.user?.userId;
+    return this.portfolioService.update(id, updatePortfolioDto, userId);
   }
 }
