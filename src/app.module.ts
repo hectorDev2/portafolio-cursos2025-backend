@@ -10,6 +10,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CursoModule } from './curso/curso.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { CaratulaModule } from './portfolio/caratula/caratula.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PrismaModule } from './prisma/prisma.module';
       serveRoot: '/uploads',
     }),
     CursoModule,
+    CaratulaModule,
   ],
   controllers: [AppController],
   providers: [
