@@ -15,6 +15,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '../enum/UserRole';
 import { CaratulaService } from './caratula.service';
+import { diskStorage } from 'multer';
 
 @Controller('portfolios/:portfolioId/caratulas')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,13 +25,25 @@ export class CaratulaController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/caratulas',
+        filename: (req, file, cb) => {
+          // Guardar el archivo exactamente con su nombre original
+          cb(null, file.originalname);
+        },
+      }),
+    }),
+  )
   async uploadCaratula(
     @Param('portfolioId') portfolioId: string,
     @UploadedFile() file: Express.Multer.File,
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
+    // Guarda solo la ruta relativa para servir el archivo
+    file.path = `/uploads/caratulas/${file.filename}`;
     return this.caratulaService.uploadCaratula(portfolioId, userId, file);
   }
 }
