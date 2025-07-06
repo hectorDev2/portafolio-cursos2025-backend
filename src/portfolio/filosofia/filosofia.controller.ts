@@ -8,6 +8,8 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  ParseFilePipe,
+  MaxFileSizeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -16,6 +18,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '../enum/UserRole';
 import { diskStorage } from 'multer';
 import { FilosofiaService } from './filosofia.service';
+import { editFileName } from 'src/utils/editFileName';
 
 @Controller('portfolios/:portfolioId/filosofias')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,19 +32,23 @@ export class FilosofiaController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads/filosofias',
-        filename: (req, file, cb) => {
-          cb(null, file.originalname);
-        },
+        filename: editFileName,
       }),
     }),
   )
   async uploadFilosofia(
     @Param('portfolioId') portfolioId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), // 5 MB
+        ],
+      }),
+    )
+    file: Express.Multer.File,
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
-    file.path = `/uploads/filosofias/${file.filename}`;
     return this.filosofiaService.uploadFilosofia(portfolioId, userId, file);
   }
 }

@@ -8,6 +8,8 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  ParseFilePipe,
+  MaxFileSizeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -16,6 +18,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '../enum/UserRole';
 import { diskStorage } from 'multer';
 import { CargaLectivaService } from './cargalectiva.service';
+import { editFileName } from '../../utils/file-upload.utils';
 
 @Controller('portfolios/:portfolioId/carga-lectiva')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,19 +32,23 @@ export class CargaLectivaController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads/cargalectiva',
-        filename: (req, file, cb) => {
-          cb(null, file.originalname);
-        },
+        filename: editFileName,
       }),
     }),
   )
   async uploadCargaLectiva(
     @Param('portfolioId') portfolioId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), // 5 MB
+        ],
+      }),
+    )
+    file: Express.Multer.File,
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
-    file.path = `/uploads/cargalectiva/${file.filename}`;
     return this.cargaLectivaService.uploadCargaLectiva(
       portfolioId,
       userId,
