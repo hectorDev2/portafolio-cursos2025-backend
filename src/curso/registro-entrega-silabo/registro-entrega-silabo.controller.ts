@@ -4,6 +4,9 @@ import { RegistroEntregaSilaboService } from './registro-entrega-silabo.service'
 import { CreateRegistroEntregaSilaboDto } from './dto/create-registro-entrega-silabo.dto';
 import { UpdateRegistroEntregaSilaboDto } from './dto/update-registro-entrega-silabo.dto';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Registro Entrega Silabo')
 @Controller('registro-entrega-silabo')
 export class RegistroEntregaSilaboController {
   constructor(private readonly registroEntregaSilaboService: RegistroEntregaSilaboService) {}

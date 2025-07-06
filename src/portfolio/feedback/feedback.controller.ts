@@ -7,6 +7,9 @@ import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { Role } from '../../enum/role';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Feedback')
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}

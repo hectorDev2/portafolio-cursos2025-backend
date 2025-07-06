@@ -19,6 +19,9 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { UserRole } from '../portfolio/enum/UserRole';
 import { Req } from '@nestjs/common';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Curso')
 @Controller('portfolios/:portfolioId/cursos')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)

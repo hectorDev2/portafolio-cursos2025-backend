@@ -20,6 +20,9 @@ import { diskStorage } from 'multer';
 import { CargaLectivaService } from './cargalectiva.service';
 import { editFileName } from '../../utils/file-upload.utils';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Carga Lectiva')
 @Controller('portfolios/:portfolioId/carga-lectiva')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)

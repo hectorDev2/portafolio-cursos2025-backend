@@ -4,6 +4,9 @@ import { AvanceCursoService } from './avance-curso.service';
 import { CreateAvanceCursoDto } from './dto/create-avance-curso.dto';
 import { UpdateAvanceCursoDto } from './dto/update-avance-curso.dto';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Avance Curso')
 @Controller('avance-curso')
 export class AvanceCursoController {
   constructor(private readonly avanceCursoService: AvanceCursoService) {}

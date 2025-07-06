@@ -4,6 +4,9 @@ import { CurriculumService } from './curriculum.service';
 import { CreateCurriculumDto } from './dto/create-curriculum.dto';
 import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Curriculum')
 @Controller('curriculum')
 export class CurriculumController {
   constructor(private readonly curriculumService: CurriculumService) {}

@@ -20,6 +20,9 @@ import { diskStorage } from 'multer';
 import { FilosofiaService } from './filosofia.service';
 import { editFileName } from 'src/utils/file-upload.utils';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Filosofia')
 @Controller('portfolios/:portfolioId/filosofias')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)

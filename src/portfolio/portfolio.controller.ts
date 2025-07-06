@@ -18,8 +18,11 @@ import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { UserRole } from './enum/UserRole';
 
+import { ApiTags } from '@nestjs/swagger';
+
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
+@ApiTags('Portfolio')
 @Controller('portfolios')
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}

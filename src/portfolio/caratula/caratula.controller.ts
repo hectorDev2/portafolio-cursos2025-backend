@@ -20,6 +20,9 @@ import { CaratulaService } from './caratula.service';
 import { diskStorage } from 'multer';
 import { editFileName } from '../../utils/file-upload.utils';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Caratula')
 @Controller('portfolios/:portfolioId/caratulas')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
