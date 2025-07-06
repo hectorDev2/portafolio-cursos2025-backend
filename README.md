@@ -16,7 +16,7 @@ Este proyecto centraliza la gestión de portafolios de cursos para docentes de l
 *   **Autenticación y Autorización**: Sistema robusto con JWT para control de acceso por roles.
 *   **Gestión de Usuarios**: CRUD completo para la gestión de usuarios.
 *   **Gestión de Portafolios**: CRUD completo para portafolios de cursos.
-*   **Gestión de Cursos**: CRUD de cursos anidados dentro de un portafolio.
+*   **Gestión de Cursos**: CRUD de cursos anidados dentro de un portafolio, incluyendo la gestión de sílabos, avances de curso y registros de entrega de sílabos.
 *   **Gestión de Documentos**: Subida y manejo de archivos (hasta 5MB), con almacenamiento local.
 *   **Gestión de Currículum**: CRUD para la gestión de documentos de currículum.
 *   **Gestión de Avance de Curso**: CRUD para la gestión de documentos de avance de curso.
