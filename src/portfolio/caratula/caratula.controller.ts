@@ -8,6 +8,8 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  ParseFilePipe,
+  MaxFileSizeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -16,6 +18,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '../enum/UserRole';
 import { CaratulaService } from './caratula.service';
 import { diskStorage } from 'multer';
+import { editFileName } from '../../utils/file-upload.utils';
 
 @Controller('portfolios/:portfolioId/caratulas')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,27 +32,23 @@ export class CaratulaController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads/caratulas',
-        filename: (req, file, cb) => {
-          // Guardar el archivo exactamente con su nombre original
-          cb(null, file.originalname);
-        },
+        filename: editFileName,
       }),
     }),
   )
   async uploadCaratula(
     @Param('portfolioId') portfolioId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }), // 5 MB
+        ],
+      }),
+    )
+    file: Express.Multer.File,
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
-    // Log para depuración
-    console.log('Archivo recibido:', {
-      originalname: file.originalname,
-      mimetype: file.mimetype,
-      size: file.size,
-      path: file.path,
-    });
-    file.path = `/uploads/caratulas/${file.filename}`;
     return this.caratulaService.uploadCaratula(portfolioId, userId, file);
   }
 }

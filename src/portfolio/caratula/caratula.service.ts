@@ -10,19 +10,23 @@ export class CaratulaService {
     userId: string,
     file: Express.Multer.File,
   ) {
-    // Verifica que el portafolio pertenezca al usuario
     const portfolio = await this.prisma.portfolio.findUnique({
       where: { id: portfolioId },
+      select: { teacherId: true }, // Solo necesitamos el teacherId
     });
+
     if (!portfolio || portfolio.teacherId !== userId) {
       throw new ForbiddenException(
         'No tienes permiso para subir carátula a este portafolio',
       );
     }
-    // Guarda la carátula (aquí solo se guarda la ruta del archivo)
+
+    // Construye la URL que se puede servir al cliente
+    const fileUrl = `/uploads/caratulas/${file.filename}`;
+
     return this.prisma.caratula.create({
       data: {
-        fileUrl: file.path, // o file.filename según configuración de Multer
+        fileUrl: fileUrl, // Guardamos la ruta relativa
         portfolioId,
       },
     });
