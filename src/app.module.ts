@@ -14,9 +14,9 @@ import { CaratulaModule } from './portfolio/caratula/caratula.module';
 import { FileModule } from './file/file.module';
 import { CurriculumModule } from './curriculum/curriculum.module';
 
-import { AvanceCursoModule } from './avance-curso/avance-curso.module';
+import { AvanceCursoModule } from './curso/avance-curso/avance-curso.module';
 import { FeedbackModule } from './portfolio/feedback/feedback.module';
-import { RegistroEntregaSilaboModule } from './registro-entrega-silabo/registro-entrega-silabo.module';
+import { RegistroEntregaSilaboModule } from './curso/registro-entrega-silabo/registro-entrega-silabo.module';
 
 @Module({
   imports: [
