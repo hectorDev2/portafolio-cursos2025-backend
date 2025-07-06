@@ -11,6 +11,8 @@ import { join } from 'path';
 import { CursoModule } from './curso/curso.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { CaratulaModule } from './portfolio/caratula/caratula.module';
+import { FileModule } from './file/file.module';
+import { CurriculumModule } from './curriculum/curriculum.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { CaratulaModule } from './portfolio/caratula/caratula.module';
     }),
     CursoModule,
     CaratulaModule,
+    FileModule,
+    CurriculumModule,
   ],
   controllers: [AppController],
   providers: [
