@@ -18,7 +18,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '../enum/UserRole';
 import { diskStorage } from 'multer';
 import { FilosofiaService } from './filosofia.service';
-import { editFileName } from 'src/utils/editFileName';
+import { editFileName } from 'src/utils/file-upload.utils';
 
 @Controller('portfolios/:portfolioId/filosofias')
 @UseGuards(JwtAuthGuard, RolesGuard)
