@@ -14,8 +14,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '../enum/UserRole';
-import { FilosofiaService } from './filosofia.service';
 import { diskStorage } from 'multer';
+import { FilosofiaService } from './filosofia.service';
 
 @Controller('portfolios/:portfolioId/filosofias')
 @UseGuards(JwtAuthGuard, RolesGuard)
