@@ -42,7 +42,13 @@ export class CaratulaController {
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
-    // Guarda solo la ruta relativa para servir el archivo
+    // Log para depuración
+    console.log('Archivo recibido:', {
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size,
+      path: file.path,
+    });
     file.path = `/uploads/caratulas/${file.filename}`;
     return this.caratulaService.uploadCaratula(portfolioId, userId, file);
   }
