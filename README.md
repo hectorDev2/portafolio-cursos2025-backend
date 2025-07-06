@@ -18,6 +18,10 @@ Este proyecto centraliza la gestión de portafolios de cursos para docentes de l
 *   **Gestión de Portafolios**: CRUD completo para portafolios de cursos.
 *   **Gestión de Cursos**: CRUD de cursos anidados dentro de un portafolio.
 *   **Gestión de Documentos**: Subida y manejo de archivos (hasta 5MB), con almacenamiento local.
+*   **Gestión de Currículum**: CRUD para la gestión de documentos de currículum.
+*   **Gestión de Avance de Curso**: CRUD para la gestión de documentos de avance de curso.
+*   **Gestión de Feedback**: CRUD para la gestión de feedback, con roles específicos para creación y visualización.
+*   **Gestión de Registro de Entrega de Sílabo**: CRUD para el registro de entrega de sílabos.
 *   **Roles de Usuario**: Permisos diferenciados para Administradores, Docentes y Evaluadores.
 
 ## Tecnologías Utilizadas
@@ -53,6 +57,26 @@ A continuación se muestran los endpoints principales de la API. Todas las rutas
 | `POST` | `/portfolios/:portfolioId/caratulas`               | Docente       | Sube el archivo de carátula.              |
 | `POST` | `/portfolios/:portfolioId/carga-lectiva`           | Docente       | Sube el archivo de carga lectiva.         |
 | `POST` | `/portfolios/:portfolioId/filosofias`              | Docente       | Sube el archivo de filosofía.             |
+| `POST` | `/curriculum`                                      | Docente       | Crea un nuevo documento de currículum.    |
+| `GET`  | `/curriculum`                                      | Docente       | Obtiene todos los documentos de currículum.|
+| `GET`  | `/curriculum/:id`                                  | Docente       | Obtiene un documento de currículum por ID.|
+| `PATCH`| `/curriculum/:id`                                  | Docente       | Actualiza un documento de currículum.     |
+| `DELETE`| `/curriculum/:id`                                 | Docente       | Elimina un documento de currículum.       |
+| `POST` | `/avance-curso`                                    | Docente       | Crea un nuevo documento de avance de curso.|
+| `GET`  | `/avance-curso`                                    | Docente       | Obtiene todos los documentos de avance de curso.|
+| `GET`  | `/avance-curso/:id`                                | Docente       | Obtiene un documento de avance de curso por ID.|
+| `PATCH`| `/avance-curso/:id`                                | Docente       | Actualiza un documento de avance de curso.|
+| `DELETE`| `/avance-curso/:id`                               | Docente       | Elimina un documento de avance de curso.  |
+| `POST` | `/portfolio/feedback`                              | Supervisor    | Crea un nuevo feedback para un portafolio.|
+| `GET`  | `/portfolio/feedback`                              | Docente, Supervisor | Obtiene todos los feedbacks.              |
+| `GET`  | `/portfolio/feedback/:id`                          | Docente, Supervisor | Obtiene un feedback por ID.               |
+| `PATCH`| `/portfolio/feedback/:id`                          | Supervisor    | Actualiza un feedback.                    |
+| `DELETE`| `/portfolio/feedback/:id`                         | Supervisor    | Elimina un feedback.                      |
+| `POST` | `/registro-entrega-silabo`                         | Docente       | Registra la entrega de un sílabo.         |
+| `GET`  | `/registro-entrega-silabo`                         | Docente       | Obtiene todos los registros de entrega de sílabo.|
+| `GET`  | `/registro-entrega-silabo/:id`                     | Docente       | Obtiene un registro de entrega de sílabo por ID.|
+| `PATCH`| `/registro-entrega-silabo/:id`                     | Docente       | Actualiza un registro de entrega de sílabo.|
+| `DELETE`| `/registro-entrega-silabo/:id`                    | Docente       | Elimina un registro de entrega de sílabo. |
 
 ## Configuración y Ejecución
 
