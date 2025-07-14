@@ -25,6 +25,9 @@ export class PortfolioService {
   async findAll(userId: string) {
     return this.prisma.portfolio.findMany({
       where: { teacherId: userId },
+      include: {
+        curso: true,
+      },
     });
   }
 

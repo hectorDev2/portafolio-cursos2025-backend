@@ -46,7 +46,7 @@ model Portfolio {
   teacherId   String
   teacher     User     @relation(fields: [teacherId], references: [id])
 
-  curso       Curso[]
+  cursos      Curso[]
 
   Caratula              Caratula[]
   CargaLectiva          CargaLectiva[]
