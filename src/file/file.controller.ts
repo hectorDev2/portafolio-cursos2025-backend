@@ -1,4 +1,3 @@
-
 import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { FileService } from './file.service';
