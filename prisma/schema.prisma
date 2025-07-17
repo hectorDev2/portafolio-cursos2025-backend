@@ -60,7 +60,7 @@ model Curso {
   name        String
   code        String?
 
-  portfolioId String  @unique
+  portfolioId String  
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 
   silabo                 silabo[]
@@ -85,7 +85,7 @@ model CargaLectiva {
   uploadedAt   DateTime @default(now())
 
   portfolioId  String
-  portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id],onDelete: Cascade)
 }
 
 model Filosofía {

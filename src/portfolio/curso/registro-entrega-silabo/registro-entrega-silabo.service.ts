@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateRegistroEntregaSilaboDto } from './dto/create-registro-entrega-silabo.dto';
 import { UpdateRegistroEntregaSilaboDto } from './dto/update-registro-entrega-silabo.dto';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RegistroEntregaSilaboService {

@@ -11,14 +11,20 @@ export class RegisterDto {
   @IsString()
   lastName: string;
 
-  @ApiProperty({ description: 'Correo electrónico del usuario', example: 'nuevo.docente@unsaac.edu.pe' })
+  @ApiProperty({
+    description: 'Correo electrónico del usuario',
+    example: 'nuevo.docente@unsaac.edu.pe',
+  })
   @IsEmail({}, { message: 'Invalid email format' })
   @Matches(/@unsaac\.edu\.pe$/, {
     message: 'el email tiene que ser del dominio @unsaac.edu.pe.',
   })
   email: string;
 
-  @ApiProperty({ description: 'Contraseña del usuario', example: 'securepassword' })
+  @ApiProperty({
+    description: 'Contraseña del usuario',
+    example: 'securepassword',
+  })
   @IsString()
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres.' })
   password: string;

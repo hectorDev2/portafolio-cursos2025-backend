@@ -8,15 +8,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { CursoModule } from './curso/curso.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { CaratulaModule } from './portfolio/caratula/caratula.module';
 import { FileModule } from './file/file.module';
 import { CurriculumModule } from './curriculum/curriculum.module';
 
-import { AvanceCursoModule } from './curso/avance-curso/avance-curso.module';
 import { FeedbackModule } from './portfolio/feedback/feedback.module';
-import { RegistroEntregaSilaboModule } from './curso/registro-entrega-silabo/registro-entrega-silabo.module';
 
 @Module({
   imports: [
@@ -28,13 +25,10 @@ import { RegistroEntregaSilaboModule } from './curso/registro-entrega-silabo/reg
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
-    CursoModule,
     CaratulaModule,
     FileModule,
     CurriculumModule,
-    AvanceCursoModule,
     FeedbackModule,
-    RegistroEntregaSilaboModule,
   ],
   controllers: [AppController],
   providers: [

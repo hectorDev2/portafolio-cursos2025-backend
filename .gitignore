@@ -4,8 +4,6 @@
 /build
 
 #database local
-/prisma/dev.db
-/prisma/migrations/
 
 #bun cache
 bun.lockb
