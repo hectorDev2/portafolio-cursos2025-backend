@@ -26,7 +26,7 @@ export class PortfolioService {
     return this.prisma.portfolio.findMany({
       where: { teacherId: userId },
       include: {
-        curso: true,
+        cursos: true,
       },
     });
   }
@@ -68,7 +68,17 @@ export class PortfolioService {
   }
 
   async remove(id: string) {
-    return this.prisma.portfolio.delete({
+    const portfolio = await this.prisma.portfolio.findUnique({
+      where: { id },
+    });
+    if (!portfolio) {
+      throw new NotFoundException('Portfolio not found.');
+    }
+    //eliminamos todas los cursos dentro del portafolio
+    await this.prisma.curso.deleteMany({
+      where: { portfolioId: id },
+    });
+    return await this.prisma.portfolio.delete({
       where: { id },
     });
   }

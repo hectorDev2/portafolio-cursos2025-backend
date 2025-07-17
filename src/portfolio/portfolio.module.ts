@@ -5,9 +5,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CaratulaModule } from './caratula/caratula.module';
 import { FilosofiaModule } from './filosofia/filosofia.module';
 import { CargaLectivaModule } from './cargalectiva/cargalectiva.module';
+import { CursoModule } from './curso/curso.module';
 
 @Module({
-  imports: [CaratulaModule, FilosofiaModule, CargaLectivaModule],
+  imports: [CaratulaModule, FilosofiaModule, CargaLectivaModule, CursoModule],
   providers: [PortfolioService, PrismaService],
   controllers: [PortfolioController],
 })

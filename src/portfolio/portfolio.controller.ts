@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -58,5 +59,11 @@ export class PortfolioController {
   ) {
     const userId = req.user?.userId;
     return this.portfolioService.update(id, updatePortfolioDto, userId);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    console.log(`Deleting portfolio with ID: ${id}`);
+    return this.portfolioService.remove(id);
   }
 }
