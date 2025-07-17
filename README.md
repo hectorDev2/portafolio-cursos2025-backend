@@ -145,4 +145,4 @@ A continuación se muestran los endpoints principales de la API. Todas las rutas
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.# ProyectoMetodologia
