@@ -46,7 +46,7 @@ model Portfolio {
   teacherId   String
   teacher     User     @relation(fields: [teacherId], references: [id])
 
-  curso       Curso?
+  curso       Cursos?
 
   Caratula              Caratula[]
   CargaLectiva          CargaLectiva[]
@@ -55,7 +55,7 @@ model Portfolio {
   feedbacks             Feedback[]
 }
 
-model Curso {
+model Cursos {
   id          String   @id @default(uuid())
   name        String
   code        String?
@@ -115,7 +115,7 @@ model silabo {
   uploadedAt   DateTime @default(now())
 
   cursoId      String
-  curso        Curso @relation(fields: [cursoId], references: [id])
+  curso        Cursos @relation(fields: [cursoId], references: [id])
 }
 
 model AvanceCurso {
@@ -124,7 +124,7 @@ model AvanceCurso {
   uploadedAt   DateTime @default(now())
 
   cursoId      String
-  curso        Curso @relation(fields: [cursoId], references: [id])
+  curso        Cursos @relation(fields: [cursoId], references: [id])
 }
 
 model RegistroEntregaSílabo {
@@ -133,7 +133,7 @@ model RegistroEntregaSílabo {
   uploadedAt   DateTime @default(now())
 
   cursoId      String
-  curso        Curso @relation(fields: [cursoId], references: [id])
+  curso        Cursos @relation(fields: [cursoId], references: [id])
 }
 
 // ========== MODELO DE FEEDBACK ==========

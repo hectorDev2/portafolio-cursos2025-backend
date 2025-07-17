@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
@@ -30,12 +31,18 @@ export class UserService {
         ...(role !== undefined && { role: { set: role } }),
       },
     });
+    
+  // Update password logic can be implemented in a separate method if needed.
+  // Esta la ruta  ---> /user/{id}
+  // parametros a utilizar id , token 
+    
+
 
     // Convert name: null to name: undefined for compatibility with UpdateUserDto
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...rest } = user;
-    const result: UpdateUserDto = {
-      ...rest,
+    const result: UpdateUserDto = { ...rest,
+      
       name: rest.name === null ? undefined : rest.name,
       role: rest.role as UpdateUserDto['role'],
     };
