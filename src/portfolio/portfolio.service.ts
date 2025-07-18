@@ -29,7 +29,7 @@ export class PortfolioService {
         cursos: true,
         Caratula: true,
         CargaLectiva: true,
-        Filosofía: true,
+        Filosofia: true,
         Curriculum: true,
         feedbacks: true,
       },
