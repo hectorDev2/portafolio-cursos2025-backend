@@ -134,6 +134,27 @@ A continuación se muestran los endpoints principales de la API. Todas las rutas
     bun run start:prod
     ```
 
+## Flujo de Trabajo de Migraciones con Prisma
+
+Cada vez que modifiques el esquema de la base de datos en `prisma/schema.prisma`, debes generar una nueva migración para registrar y aplicar esos cambios.
+
+1.  **Modifica `prisma/schema.prisma`**: Realiza los cambios necesarios en tus modelos.
+
+2.  **Genera la migración**: Ejecuta el siguiente comando en tu terminal. Es una buena práctica proporcionar un nombre descriptivo para la migración.
+
+    ```bash
+    npx prisma migrate dev --name nombre-descriptivo-de-la-migracion
+    ```
+
+    Este comando:
+    *   Crea un nuevo archivo de migración SQL en `prisma/migrations/`.
+    *   Aplica los cambios a tu base de datos de desarrollo.
+    *   Regenera el Prisma Client para que tu código tenga conocimiento de los nuevos cambios.
+
+3.  **Haz commit de los cambios**: Asegúrate de incluir en tu commit tanto el archivo `prisma/schema.prisma` modificado como la nueva carpeta de migración generada. Esto es crucial para que otros desarrolladores y el entorno de producción puedan sincronizar la estructura de la base de datos.
+
+**Importante**: El archivo de la base de datos de desarrollo (`prisma/dev.db`) está incluido en el `.gitignore` y no debe ser subido al repositorio.
+
 ## Scripts Principales
 
 *   `bun run dev`: Inicia la aplicación en modo de desarrollo.
