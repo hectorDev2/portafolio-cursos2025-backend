@@ -14,6 +14,7 @@ import { FileModule } from './file/file.module';
 import { CurriculumModule } from './curriculum/curriculum.module';
 
 import { FeedbackModule } from './portfolio/feedback/feedback.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FeedbackModule } from './portfolio/feedback/feedback.module';
     FileModule,
     CurriculumModule,
     FeedbackModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [

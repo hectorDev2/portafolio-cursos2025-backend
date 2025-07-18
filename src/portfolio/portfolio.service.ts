@@ -27,6 +27,11 @@ export class PortfolioService {
       where: { teacherId: userId },
       include: {
         cursos: true,
+        Caratula: true,
+        CargaLectiva: true,
+        Filosofía: true,
+        Curriculum: true,
+        feedbacks: true,
       },
     });
   }

@@ -78,6 +78,7 @@ export class CursoController {
     @Param('cursoId') cursoId: string,
     @Req() req: any,
   ) {
+    console.log(portfolioId, cursoId);
     const userId = req.user?.userId;
     return this.cursoService.removeByPortfolio(cursoId, portfolioId, userId);
   }
