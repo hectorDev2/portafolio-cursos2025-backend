@@ -54,12 +54,12 @@ CREATE TABLE "CargaLectiva" (
 );
 
 -- CreateTable
-CREATE TABLE "Filosofía" (
+CREATE TABLE "filosofia" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "fileUrl" TEXT NOT NULL,
     "uploadedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "portfolioId" TEXT NOT NULL,
-    CONSTRAINT "Filosofía_portfolioId_fkey" FOREIGN KEY ("portfolioId") REFERENCES "Portfolio" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "filosofia_portfolioId_fkey" FOREIGN KEY ("portfolioId") REFERENCES "Portfolio" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -112,3 +112,15 @@ CREATE TABLE "Feedback" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Caratula_portfolioId_key" ON "Caratula"("portfolioId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CargaLectiva_portfolioId_key" ON "CargaLectiva"("portfolioId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "filosofia_portfolioId_key" ON "filosofia"("portfolioId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Curriculum_portfolioId_key" ON "Curriculum"("portfolioId");

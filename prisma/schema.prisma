@@ -49,7 +49,7 @@ model Portfolio {
   cursos      Curso[]
   Caratula    Caratula?
   CargaLectiva CargaLectiva?
-  Filosofía   Filosofía?
+  Filosofia   filosofia?
   Curriculum  Curriculum?
   feedbacks   Feedback[]
 }
@@ -87,7 +87,7 @@ model CargaLectiva {
   portfolio    Portfolio @relation(fields: [portfolioId], references: [id],onDelete: Cascade)
 }
 
-model Filosofía {
+model filosofia {
   id           String   @id @default(uuid())
   fileUrl      String
   uploadedAt   DateTime @default(now())
