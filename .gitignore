@@ -4,6 +4,7 @@
 /build
 
 #database local
+/prisma/dev.db
 
 #bun cache
 bun.lockb
