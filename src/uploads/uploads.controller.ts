@@ -12,7 +12,7 @@ export class UploadsController {
     @Param('filename') filename: string,
     @Res() res: Response,
   ) {
-        const filePath = path.join(process.cwd(), 'uploads', folder, filename);
+    const filePath = path.join(process.cwd(), 'uploads', folder, filename);
     return res.sendFile(filePath, (err) => {
       if (err) {
         res.status(404).json({ message: 'Archivo no encontrado' });

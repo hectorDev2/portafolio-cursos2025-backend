@@ -23,7 +23,7 @@ import { editFileName } from '../../utils/file-upload.utils';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Caratula')
-@Controller('portfolios/:portfolioId/caratulas')
+@Controller('portfolios/:portfolioId/caratula')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
 export class CaratulaController {
