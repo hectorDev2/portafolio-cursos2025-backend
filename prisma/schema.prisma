@@ -47,12 +47,11 @@ model Portfolio {
   teacher     User     @relation(fields: [teacherId], references: [id])
 
   cursos      Curso[]
-
-  Caratula              Caratula[]
-  CargaLectiva          CargaLectiva[]
-  Filosofía             Filosofía[]
-  Curriculum            Curriculum[]
-  feedbacks             Feedback[]
+  Caratula    Caratula?
+  CargaLectiva CargaLectiva?
+  Filosofía   Filosofía?
+  Curriculum  Curriculum?
+  feedbacks   Feedback[]
 }
 
 model Curso {
@@ -75,7 +74,7 @@ model Caratula {
   fileUrl      String
   uploadedAt   DateTime @default(now())
 
-  portfolioId  String
+  portfolioId  String @unique
   portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
 }
 
@@ -84,7 +83,7 @@ model CargaLectiva {
   fileUrl      String
   uploadedAt   DateTime @default(now())
 
-  portfolioId  String
+  portfolioId  String @unique
   portfolio    Portfolio @relation(fields: [portfolioId], references: [id],onDelete: Cascade)
 }
 
@@ -93,7 +92,7 @@ model Filosofía {
   fileUrl      String
   uploadedAt   DateTime @default(now())
 
-  portfolioId  String
+  portfolioId  String @unique
   portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
 }
 
@@ -101,8 +100,7 @@ model Curriculum {
   id           String   @id @default(uuid())
   fileUrl      String
   uploadedAt   DateTime @default(now())
-
-  portfolioId  String
+  portfolioId  String @unique
   portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
 }
 
