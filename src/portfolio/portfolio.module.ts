@@ -6,9 +6,16 @@ import { CaratulaModule } from './caratula/caratula.module';
 import { FilosofiaModule } from './filosofia/filosofia.module';
 import { CargaLectivaModule } from './cargalectiva/cargalectiva.module';
 import { CursoModule } from './curso/curso.module';
+import { CurriculumModule } from './curriculum/curriculum.module';
 
 @Module({
-  imports: [CaratulaModule, FilosofiaModule, CargaLectivaModule, CursoModule],
+  imports: [
+    CaratulaModule,
+    CurriculumModule,
+    FilosofiaModule,
+    CargaLectivaModule,
+    CursoModule,
+  ],
   providers: [PortfolioService, PrismaService],
   controllers: [PortfolioController],
 })
