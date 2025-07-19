@@ -9,9 +9,8 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
-import { CaratulaModule } from './portfolio/caratula/caratula.module';
+
 import { FileModule } from './file/file.module';
-import { CurriculumModule } from './curriculum/curriculum.module';
 
 import { FeedbackModule } from './portfolio/feedback/feedback.module';
 import { UploadsModule } from './uploads/uploads.module';
@@ -26,9 +25,7 @@ import { UploadsModule } from './uploads/uploads.module';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
-    CaratulaModule,
     FileModule,
-    CurriculumModule,
     FeedbackModule,
     UploadsModule,
   ],
