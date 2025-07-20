@@ -7,12 +7,19 @@ export class CreateCursoDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ description: 'Código del curso (opcional)', example: 'INF-101', required: false })
+  @ApiProperty({
+    description: 'Código del curso (opcional)',
+    example: 'INF-101',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   code?: string;
 
-  @ApiProperty({ description: 'ID del portafolio al que pertenece el curso', example: 'a1b2c3d4-e5f6-7890-1234-567890abcdef' })
+  @ApiProperty({
+    description: 'ID del portafolio al que pertenece el curso',
+    example: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+  })
   @IsUUID()
   @IsNotEmpty()
   portfolioId: string;

@@ -26,7 +26,7 @@ export class RegistroEntregaSilaboService {
       );
     }
 
-    return this.prisma.registroEntregaSílabo.create({
+    return this.prisma.registroEntregaSilabo.create({
       data: {
         ...createRegistroEntregaSilaboDto,
         fileUrl: createRegistroEntregaSilaboDto.fileUrl ?? '', // Provide a default or handle as needed
@@ -35,7 +35,7 @@ export class RegistroEntregaSilaboService {
   }
 
   findAll(userId: string) {
-    return this.prisma.registroEntregaSílabo.findMany({
+    return this.prisma.registroEntregaSilabo.findMany({
       where: {
         curso: {
           portfolio: {
@@ -48,7 +48,7 @@ export class RegistroEntregaSilaboService {
 
   async findOne(id: string, userId: string) {
     const registroEntregaSilabo =
-      await this.prisma.registroEntregaSílabo.findUnique({
+      await this.prisma.registroEntregaSilabo.findUnique({
         where: { id },
         include: { curso: { include: { portfolio: true } } },
       });
@@ -70,7 +70,7 @@ export class RegistroEntregaSilaboService {
     userId: string,
   ) {
     const registroEntregaSilabo =
-      await this.prisma.registroEntregaSílabo.findUnique({
+      await this.prisma.registroEntregaSilabo.findUnique({
         where: { id },
         include: { curso: { include: { portfolio: true } } },
       });
@@ -83,7 +83,7 @@ export class RegistroEntregaSilaboService {
         'No tienes permiso para modificar este registro de entrega de sílabo',
       );
     }
-    return this.prisma.registroEntregaSílabo.update({
+    return this.prisma.registroEntregaSilabo.update({
       where: { id },
       data: updateRegistroEntregaSilaboDto,
     });
@@ -91,7 +91,7 @@ export class RegistroEntregaSilaboService {
 
   async remove(id: string, userId: string) {
     const registroEntregaSilabo =
-      await this.prisma.registroEntregaSílabo.findUnique({
+      await this.prisma.registroEntregaSilabo.findUnique({
         where: { id },
         include: { curso: { include: { portfolio: true } } },
       });
@@ -104,6 +104,6 @@ export class RegistroEntregaSilaboService {
         'No tienes permiso para eliminar este registro de entrega de sílabo',
       );
     }
-    return this.prisma.registroEntregaSílabo.delete({ where: { id } });
+    return this.prisma.registroEntregaSilabo.delete({ where: { id } });
   }
 }
