@@ -63,8 +63,8 @@ model Curso {
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 
   silabo                 silabo?
-  avances                AvanceCurso?
-  registrosEntregaSilabo RegistroEntregaSilabo?
+  avanceCurso            AvanceCurso?
+  registroEntregaSilabo RegistroEntregaSilabo?
 }
 
 // ========== MODELOS DE DOCUMENTOS DEL PORTFOLIO ==========
