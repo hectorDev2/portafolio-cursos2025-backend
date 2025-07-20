@@ -3,7 +3,6 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateAvanceCursoDto } from './dto/create-avance-curso.dto';
 import { UpdateAvanceCursoDto } from './dto/update-avance-curso.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -11,22 +10,27 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class AvanceCursoService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createAvanceCursoDto: CreateAvanceCursoDto, userId: string) {
+  async uploadAvanceCurso(
+    cursoId: string,
+    userId: string,
+    file: Express.Multer.File,
+  ) {
     const curso = await this.prisma.curso.findUnique({
-      where: { id: createAvanceCursoDto.cursoId },
-      include: { portfolio: true },
+      where: { id: cursoId },
+      include: { portfolio: { select: { teacherId: true } } },
     });
 
     if (!curso || curso.portfolio.teacherId !== userId) {
       throw new ForbiddenException(
-        'No tienes permiso para añadir un avance de curso a este curso',
+        'No tienes permiso para subir avance de curso a este curso',
       );
     }
 
+    const fileUrl = `/uploads/avance-curso/${file.filename}`;
     return this.prisma.avanceCurso.create({
       data: {
-        ...createAvanceCursoDto,
-        fileUrl: createAvanceCursoDto.fileUrl, // Ensure fileUrl is present
+        fileUrl: fileUrl,
+        cursoId,
       },
     });
   }
@@ -82,6 +86,7 @@ export class AvanceCursoService {
       include: { curso: { include: { portfolio: true } } },
     });
 
+    console.log(avanceCurso);
     if (!avanceCurso || avanceCurso.curso.portfolio.teacherId !== userId) {
       throw new ForbiddenException(
         'No tienes permiso para eliminar este avance de curso',

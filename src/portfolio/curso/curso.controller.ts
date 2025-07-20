@@ -22,7 +22,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UserRole } from '../enum/UserRole';
 
 @ApiTags('Curso')
-@Controller('portfolios/:portfolioId/cursos')
+@Controller('cursos')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
 export class CursoController {
@@ -30,14 +30,10 @@ export class CursoController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(
-    @Param('portfolioId') portfolioId: string,
-    @Body() createCursoDto: CreateCursoDto,
-    @Req() req: any,
-  ) {
+  create(@Body() createCursoDto: CreateCursoDto, @Req() req: any) {
     const userId = req.user?.userId;
     // Forzamos el portfolioId del path en el DTO
-    return this.cursoService.create({ ...createCursoDto, portfolioId }, userId);
+    return this.cursoService.create({ ...createCursoDto }, userId);
   }
 
   @Get()
@@ -47,13 +43,9 @@ export class CursoController {
   }
 
   @Get(':cursoId')
-  findOne(
-    @Param('portfolioId') portfolioId: string,
-    @Param('cursoId') cursoId: string,
-    @Req() req: any,
-  ) {
+  findOne(@Param('cursoId') cursoId: string, @Req() req: any) {
     const userId = req.user?.userId;
-    return this.cursoService.findOneByPortfolio(cursoId, portfolioId, userId);
+    return this.cursoService.findOneByPortfolio(cursoId, userId);
   }
 
   @Patch(':cursoId')
@@ -74,13 +66,8 @@ export class CursoController {
 
   @Delete(':cursoId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(
-    @Param('portfolioId') portfolioId: string,
-    @Param('cursoId') cursoId: string,
-    @Req() req: any,
-  ) {
-    console.log(portfolioId, cursoId);
+  remove(@Param('cursoId') cursoId: string, @Req() req: any) {
     const userId = req.user?.userId;
-    return this.cursoService.removeByPortfolio(cursoId, portfolioId, userId);
+    return this.cursoService.removeByPortfolio(cursoId, userId);
   }
 }

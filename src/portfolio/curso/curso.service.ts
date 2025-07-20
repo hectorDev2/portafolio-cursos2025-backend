@@ -14,7 +14,7 @@ export class CursoService {
   async create(createCursoDto: CreateCursoDto, userId: string) {
     // LOG para depuración
     console.log('userId recibido:', userId);
-    console.log('portfolioId recibido:', createCursoDto.portfolioId);
+    console.log('createCursoDto recibido:', createCursoDto);
     // Verifica que el portafolio existe y pertenece al docente
     const portfolio = await this.prisma.portfolio.findUnique({
       where: { id: createCursoDto.portfolioId },
@@ -85,7 +85,7 @@ export class CursoService {
     await this.prisma.avanceCurso.deleteMany({
       where: { cursoId: id },
     });
-    await this.prisma.registroEntregaSílabo.deleteMany({
+    await this.prisma.registroEntregaSilabo.deleteMany({
       where: { cursoId: id },
     });
     await this.prisma.silabo.deleteMany({
@@ -104,19 +104,17 @@ export class CursoService {
     });
   }
 
-  async findOneByPortfolio(
-    cursoId: string,
-    portfolioId: string,
-    userId: string,
-  ) {
+  async findOneByPortfolio(cursoId: string, userId: string) {
     // Busca un curso por id y portafolio, validando pertenencia
     const curso = await this.prisma.curso.findFirst({
       where: {
         id: cursoId,
-        portfolioId,
         portfolio: { teacherId: userId },
       },
-      include: { portfolio: true },
+      include: {
+        avanceCurso: true,
+        silabo: true,
+      },
     });
     if (!curso) {
       throw new NotFoundException('Curso no encontrado');
@@ -149,16 +147,11 @@ export class CursoService {
     });
   }
 
-  async removeByPortfolio(
-    cursoId: string,
-    portfolioId: string,
-    userId: string,
-  ) {
+  async removeByPortfolio(cursoId: string, userId: string) {
     // Verifica pertenencia antes de eliminar
     const curso = await this.prisma.curso.findFirst({
       where: {
         id: cursoId,
-        portfolioId,
         portfolio: { teacherId: userId },
       },
     });
@@ -171,9 +164,7 @@ export class CursoService {
     await this.prisma.avanceCurso.deleteMany({
       where: { cursoId },
     });
-    await this.prisma.registroEntregaSílabo.deleteMany({
-      where: { cursoId },
-    });
+
     await this.prisma.silabo.deleteMany({
       where: { cursoId },
     });

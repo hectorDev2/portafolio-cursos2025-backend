@@ -16,7 +16,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { AvanceCursoService } from './avance-curso.service';
-import { CreateAvanceCursoDto } from './dto/create-avance-curso.dto';
 import { UpdateAvanceCursoDto } from './dto/update-avance-curso.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -28,7 +27,7 @@ import { UserRole } from 'src/portfolio/enum/UserRole';
 import { editFileName } from 'src/utils/file-upload.utils';
 
 @ApiTags('Avance Curso')
-@Controller('avance-curso')
+@Controller('cursos/:cursoId/avance-curso')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
 export class AvanceCursoController {
@@ -44,8 +43,8 @@ export class AvanceCursoController {
       }),
     }),
   )
-  create(
-    @Body() createAvanceCursoDto: CreateAvanceCursoDto,
+  async uploadAvanceCurso(
+    @Param('cursoId') cursoId: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -57,11 +56,7 @@ export class AvanceCursoController {
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
-    const fileUrl = `/uploads/avance-curso/${file.filename}`;
-    return this.avanceCursoService.create(
-      { ...createAvanceCursoDto, fileUrl },
-      userId,
-    );
+    return this.avanceCursoService.uploadAvanceCurso(cursoId, userId, file);
   }
 
   @Get()
