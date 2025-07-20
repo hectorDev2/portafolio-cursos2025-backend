@@ -81,6 +81,16 @@ export class CursoService {
         'No tienes permiso para eliminar este curso',
       );
     }
+    //eliminar todos los elementos relacionados con el curso
+    await this.prisma.avanceCurso.deleteMany({
+      where: { cursoId: id },
+    });
+    await this.prisma.registroEntregaSílabo.deleteMany({
+      where: { cursoId: id },
+    });
+    await this.prisma.silabo.deleteMany({
+      where: { cursoId: id },
+    });
     return this.prisma.curso.delete({ where: { id } });
   }
 
@@ -157,6 +167,18 @@ export class CursoService {
         'No tienes permiso para eliminar este curso',
       );
     }
+    //delete all related elements
+    await this.prisma.avanceCurso.deleteMany({
+      where: { cursoId },
+    });
+    await this.prisma.registroEntregaSílabo.deleteMany({
+      where: { cursoId },
+    });
+    await this.prisma.silabo.deleteMany({
+      where: { cursoId },
+    });
+    //eliminar el curso
+    console.log('Eliminando curso con ID:', cursoId);
     return this.prisma.curso.delete({ where: { id: cursoId } });
   }
 }

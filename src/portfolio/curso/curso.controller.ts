@@ -73,6 +73,7 @@ export class CursoController {
   }
 
   @Delete(':cursoId')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @Param('portfolioId') portfolioId: string,
     @Param('cursoId') cursoId: string,
