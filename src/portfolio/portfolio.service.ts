@@ -79,8 +79,21 @@ export class PortfolioService {
     if (!portfolio) {
       throw new NotFoundException('Portfolio not found.');
     }
+    //
     //eliminamos todas los cursos dentro del portafolio
     await this.prisma.curso.deleteMany({
+      where: { portfolioId: id },
+    });
+    await this.prisma.caratula.deleteMany({
+      where: { portfolioId: id },
+    });
+    await this.prisma.cargaLectiva.deleteMany({
+      where: { portfolioId: id },
+    });
+    await this.prisma.filosofia.deleteMany({
+      where: { portfolioId: id },
+    });
+    await this.prisma.curriculum.deleteMany({
       where: { portfolioId: id },
     });
     return await this.prisma.portfolio.delete({
