@@ -19,21 +19,17 @@ export class CurriculumService {
         'No tienes permiso para subir un currículum a este portafolio',
       );
     }
-    // Elimina el currículum existente si hay alguno
-    const existingCurriculum = await this.prisma.curriculum.findFirst({
-      where: { portfolioId },
-    });
+    const fileUrl = `/uploads/curriculum/${file.filename}`;
 
-    if (existingCurriculum) {
-      await this.prisma.curriculum.delete({
-        where: { id: existingCurriculum.id },
-      });
-    }
-
-    // Guarda el currículum (ruta relativa)
-    return this.prisma.curriculum.create({
-      data: {
-        fileUrl: file.path,
+    return this.prisma.curriculum.upsert({
+      where: {
+        portfolioId,
+      },
+      update: {
+        fileUrl,
+      },
+      create: {
+        fileUrl,
         portfolioId,
       },
     });

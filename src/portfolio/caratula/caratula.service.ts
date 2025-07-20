@@ -17,16 +17,22 @@ export class CaratulaService {
 
     if (!portfolio || portfolio.teacherId !== userId) {
       throw new ForbiddenException(
-        'No tienes permiso para subir carátula a este portafolio',
+        'No tienes permiso para subir carátuenla a este portafolio',
       );
     }
 
     // Construye la URL que se puede servir al cliente
     const fileUrl = `/uploads/caratulas/${file.filename}`;
 
-    return this.prisma.caratula.create({
-      data: {
-        fileUrl: fileUrl, // Guardamos la ruta relativa
+    return this.prisma.caratula.upsert({
+      where: {
+        portfolioId,
+      },
+      update: {
+        fileUrl,
+      },
+      create: {
+        fileUrl,
         portfolioId,
       },
     });

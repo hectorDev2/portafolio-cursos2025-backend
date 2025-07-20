@@ -19,10 +19,17 @@ export class CargaLectivaService {
         'No tienes permiso para subir carga lectiva a este portafolio',
       );
     }
-    // Guarda la carga lectiva (ruta relativa)
-    return this.prisma.cargaLectiva.create({
-      data: {
-        fileUrl: file.path,
+    const fileUrl = `/uploads/cargalectiva/${file.filename}`;
+
+    return this.prisma.cargaLectiva.upsert({
+      where: {
+        portfolioId,
+      },
+      update: {
+        fileUrl,
+      },
+      create: {
+        fileUrl,
         portfolioId,
       },
     });
