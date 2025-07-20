@@ -59,12 +59,12 @@ model Curso {
   name        String
   code        String?
 
-  portfolioId String  
+  portfolioId String
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 
-  silabo                 silabo[]
-  avances                AvanceCurso[]
-  registrosEntregaSilabo RegistroEntregaSílabo[]
+  silabo                 silabo?
+  avances                AvanceCurso?
+  registrosEntregaSilabo RegistroEntregaSilabo?
 }
 
 // ========== MODELOS DE DOCUMENTOS DEL PORTFOLIO ==========
@@ -112,8 +112,8 @@ model silabo {
   fileUrl      String
   uploadedAt   DateTime @default(now())
 
-  cursoId      String
-  curso        Curso @relation(fields: [cursoId], references: [id])
+  cursoId      String @unique
+  curso        Curso? @relation(fields: [cursoId], references: [id])
 }
 
 model AvanceCurso {
@@ -121,17 +121,17 @@ model AvanceCurso {
   fileUrl      String
   uploadedAt   DateTime @default(now())
 
-  cursoId      String
-  curso        Curso @relation(fields: [cursoId], references: [id])
+  cursoId      String @unique
+  curso        Curso   @relation(fields: [cursoId], references: [id])
 }
 
-model RegistroEntregaSílabo {
+model RegistroEntregaSilabo {
   id           String   @id @default(uuid())
   fileUrl      String
   uploadedAt   DateTime @default(now())
 
-  cursoId      String
-  curso        Curso @relation(fields: [cursoId], references: [id])
+  cursoId      String @unique
+  curso        Curso   @relation(fields: [cursoId], references: [id])
 }
 
 // ========== MODELO DE FEEDBACK ==========
