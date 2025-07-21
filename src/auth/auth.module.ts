@@ -14,7 +14,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     PassportModule, // Módulo base de Passport
     JwtModule.register({
       // Configura JwtModule
-      secret: process.env.SECRET, // Secreto para firmar tokens
+      secret: process.env.JWT_SECRET, // Secreto para firmar tokens
       signOptions: { expiresIn: '60m' }, // Opciones de firma (ej. expiración)
     }),
   ],

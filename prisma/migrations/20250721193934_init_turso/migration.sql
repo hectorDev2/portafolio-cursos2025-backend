@@ -91,12 +91,12 @@ CREATE TABLE "AvanceCurso" (
 );
 
 -- CreateTable
-CREATE TABLE "RegistroEntregaSílabo" (
+CREATE TABLE "RegistroEntregaSilabo" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "fileUrl" TEXT NOT NULL,
     "uploadedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "cursoId" TEXT NOT NULL,
-    CONSTRAINT "RegistroEntregaSílabo_cursoId_fkey" FOREIGN KEY ("cursoId") REFERENCES "Curso" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "RegistroEntregaSilabo_cursoId_fkey" FOREIGN KEY ("cursoId") REFERENCES "Curso" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -124,3 +124,12 @@ CREATE UNIQUE INDEX "filosofia_portfolioId_key" ON "filosofia"("portfolioId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Curriculum_portfolioId_key" ON "Curriculum"("portfolioId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "silabo_cursoId_key" ON "silabo"("cursoId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "AvanceCurso_cursoId_key" ON "AvanceCurso"("cursoId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "RegistroEntregaSilabo_cursoId_key" ON "RegistroEntregaSilabo"("cursoId");
