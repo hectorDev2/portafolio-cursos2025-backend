@@ -1,5 +1,6 @@
 import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from 'src/enum/role';
 
 // Ensure 'export' keyword is present here
 export class RegisterDto {
@@ -20,6 +21,17 @@ export class RegisterDto {
     message: 'el email tiene que ser del dominio @unsaac.edu.pe.',
   })
   email: string;
+
+  @ApiProperty({
+    description: 'Rol del usuario',
+    example: 'docente',
+  })
+  @Matches(/^(DOCENTE|ADMINISTRADOR)$/, {
+    message:
+      'El rol debe ser uno de los siguientes: docente, estudiante, administrador.',
+  })
+  @IsString()
+  role?: Role;
 
   @ApiProperty({
     description: 'Contraseña del usuario',

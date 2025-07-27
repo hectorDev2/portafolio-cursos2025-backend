@@ -3,6 +3,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'src/enum/role';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +17,10 @@ export class AuthService {
     lastName: string,
     email: string,
     password: string,
+    role?: Role,
   ): Promise<any> {
     // 1. Check if user already exists
-    console.log(name, lastName, email, password, 'registering user');
+    console.log(name, lastName, role, email, password, 'registering user');
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser !== null) {
       throw new BadRequestException('User with this email already exists.');
@@ -27,16 +29,13 @@ export class AuthService {
     // 2. Hash the password
     const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds: 10 is a good default
 
-    //get users
-    const users = await this.userService.getAllUsers();
-    console.log(users, 'users found in auth service');
-
     // 3. Create the user in the database
     const newUser = await this.prisma.user.create({
       data: {
         name,
         lastName,
         email,
+        role: (role || Role.DOCENTE) as any, // Default to 'DOCENTE' if no role is provided
         password: hashedPassword,
       },
     });
