@@ -32,7 +32,7 @@ export class UserController {
 
   //! READ
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.DOCENTE)
+  @Roles(UserRole.ADMINISTRADOR)
   @Get()
   getAllUsers() {
     return this.userService.getAllUsers();
@@ -58,7 +58,7 @@ export class UserController {
 
   //! DELETE
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.DOCENTE)
+  @Roles(UserRole.ADMINISTRADOR)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT) // Devuelve un código de estado 204 No Content
   async deleteUser(@Param('id') id: string): Promise<void> {

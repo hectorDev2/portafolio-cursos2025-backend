@@ -2,13 +2,21 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PortfolioService } from 'src/portfolio/portfolio.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private portfolioService: PortfolioService,
+  ) {}
 
   async getAllUsers(): Promise<any[]> {
-    const users = await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany({
+      include: {
+        Portfolio: true, // Include related Portfolio data
+      },
+    });
     return users;
   }
 
@@ -60,6 +68,15 @@ export class UserService {
 
   async deleteUser(id: string): Promise<void> {
     try {
+      //delete related portfolio first if needed
+      //delete all related portfolio entries
+      // This assumes that the PortfolioService has a method to remove a portfolio by user ID
+      // Adjust this logic based on your actual portfolio deletion requirements
+      // If you have a specific method to delete the portfolio, use that instead
+      // For example, if you have a method like this:
+      // await this.portfolioService.deleteByUserId(id);
+      // you can call it here.
+      await this.portfolioService.removeByTeacherId(id);
       await this.prisma.user.delete({
         where: { id },
       });
