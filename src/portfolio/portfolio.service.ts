@@ -72,14 +72,26 @@ export class PortfolioService {
     });
   }
 
-  async remove(id: string) {
+  async removeById(id: string) {
     const portfolio = await this.prisma.portfolio.findUnique({
       where: { id },
     });
     if (!portfolio) {
       throw new NotFoundException('Portfolio not found.');
     }
+    await this.deleteAllInPortfolio(id);
+    return await this.prisma.portfolio.delete({
+      where: { id },
+    });
+  }
 
+  async findByTeacherId(teacherId: string) {
+    return this.prisma.portfolio.findMany({
+      where: { teacherId },
+    });
+  }
+
+  deleteAllInPortfolio = async (id: string) => {
     await this.prisma.caratula.deleteMany({
       where: { portfolioId: id },
     });
@@ -106,15 +118,21 @@ export class PortfolioService {
     await this.prisma.curso.deleteMany({
       where: { portfolioId: id },
     });
-
-    return await this.prisma.portfolio.delete({
-      where: { id },
-    });
-  }
-
-  async findByTeacherId(teacherId: string) {
-    return this.prisma.portfolio.findMany({
+  };
+  async removeByTeacherId(teacherId: string) {
+    const portfolios = await this.prisma.portfolio.findMany({
       where: { teacherId },
     });
+
+    if (portfolios.length === 0) {
+      return;
+    }
+
+    for (const portfolio of portfolios) {
+      await this.deleteAllInPortfolio(portfolio.id);
+      await this.prisma.portfolio.delete({
+        where: { id: portfolio.id },
+      });
+    }
   }
 }

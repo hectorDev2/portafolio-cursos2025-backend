@@ -64,6 +64,6 @@ export class PortfolioController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     console.log(`Deleting portfolio with ID: ${id}`);
-    return this.portfolioService.remove(id);
+    return this.portfolioService.removeById(id);
   }
 }

@@ -18,5 +18,6 @@ import { CurriculumModule } from './curriculum/curriculum.module';
   ],
   providers: [PortfolioService, PrismaService],
   controllers: [PortfolioController],
+  exports: [PortfolioService],
 })
 export class PortfolioModule {}
