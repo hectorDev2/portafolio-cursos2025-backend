@@ -22,7 +22,7 @@ import { UserRole } from './enum/UserRole';
 import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.DOCENTE)
+@Roles(UserRole.DOCENTE, UserRole.ADMINISTRADOR)
 @ApiTags('Portfolio')
 @Controller('portfolios')
 export class PortfolioController {
