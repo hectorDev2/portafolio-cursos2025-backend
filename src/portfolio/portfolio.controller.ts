@@ -22,7 +22,7 @@ import { UserRole } from './enum/UserRole';
 import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.DOCENTE)
+@Roles(UserRole.DOCENTE, UserRole.ADMINISTRADOR)
 @ApiTags('Portfolio')
 @Controller('portfolios')
 export class PortfolioController {
@@ -42,6 +42,13 @@ export class PortfolioController {
   async findAll(@Req() req: any) {
     const userId = req.user?.userId;
     return this.portfolioService.findAll(userId);
+  }
+
+  @Get('all')
+  @Roles(UserRole.ADMINISTRADOR)
+  @HttpCode(HttpStatus.OK)
+  async getAllPortfolios() {
+    return this.portfolioService.findAllPortfolios();
   }
 
   @Get(':id')

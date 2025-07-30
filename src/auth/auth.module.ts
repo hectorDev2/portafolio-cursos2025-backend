@@ -12,17 +12,13 @@ import { UserModule } from 'src/user/user.module';
   imports: [
     UserModule,
     PassportModule, // Módulo base de Passport
-    JwtModule.register({ // Configura JwtModule
+    JwtModule.register({
+      // Configura JwtModule
       secret: process.env.JWT_SECRET, // Secreto para firmar tokens
       signOptions: { expiresIn: '60m' }, // Opciones de firma (ej. expiración)
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    RolesGuard,
-    JwtAuthGuard,
-  ],
+  providers: [AuthService, JwtStrategy, RolesGuard, JwtAuthGuard],
 })
 export class AuthModule {}

@@ -36,6 +36,19 @@ export class PortfolioService {
     });
   }
 
+  async findAllPortfolios() {
+    return this.prisma.portfolio.findMany({
+      include: {
+        cursos: true,
+        Caratula: true,
+        CargaLectiva: true,
+        Filosofia: true,
+        Curriculum: true,
+        feedbacks: true,
+      },
+    });
+  }
+
   async findOne(id: string, requestUserId: string, requestUserRole: UserRole) {
     const portfolio = await this.prisma.portfolio.findUnique({
       where: { id },
