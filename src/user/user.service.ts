@@ -68,14 +68,6 @@ export class UserService {
 
   async deleteUser(id: string): Promise<void> {
     try {
-      //delete related portfolio first if needed
-      //delete all related portfolio entries
-      // This assumes that the PortfolioService has a method to remove a portfolio by user ID
-      // Adjust this logic based on your actual portfolio deletion requirements
-      // If you have a specific method to delete the portfolio, use that instead
-      // For example, if you have a method like this:
-      // await this.portfolioService.deleteByUserId(id);
-      // you can call it here.
       await this.portfolioService.removeByTeacherId(id);
       await this.prisma.user.delete({
         where: { id },
