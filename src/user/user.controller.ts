@@ -46,7 +46,7 @@ export class UserController {
   }
   //! UPDATE
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.DOCENTE)
+  @Roles(UserRole.DOCENTE, UserRole.ADMINISTRADOR)
   @Post(':id')
   @HttpCode(HttpStatus.OK) // Devuelve un código de estado 200 OK
   async updateUser(
