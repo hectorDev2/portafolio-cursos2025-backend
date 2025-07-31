@@ -11,6 +11,41 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto {
   @ApiProperty({
+    description: 'Número de teléfono del usuario (opcional)',
+    example: '943834699',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'El número de teléfono debe ser una cadena de texto.' })
+  phoneNumber?: string;
+
+  @ApiProperty({
+    description: 'Dirección del usuario (opcional)',
+    example: 'Pasaje Los Sauces B-15',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'La dirección debe ser una cadena de texto.' })
+  address?: string;
+
+  @ApiProperty({
+    description: 'Fecha de nacimiento del usuario (opcional)',
+    example: '1998-12-20',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'La fecha de nacimiento debe ser una cadena de texto.' })
+  dateOfBirth?: string;
+
+  @ApiProperty({
+    description: 'Biografía del usuario (opcional)',
+    example: 'Hola biografía',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'La biografía debe ser una cadena de texto.' })
+  biography?: string;
+  @ApiProperty({
     description: 'Correo electrónico del usuario (opcional)',
     example: 'new_test@unsaac.edu.pe',
     required: false,

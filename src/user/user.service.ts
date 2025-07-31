@@ -31,10 +31,17 @@ export class UserService {
 
   async updateUser(id: string, updateUserDto: any): Promise<UpdateUserDto> {
     const { role, ...restDto } = updateUserDto;
+    const userFound = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!userFound) {
+      throw new NotFoundException(`Usuario con ID "${id}" no encontrado.`);
+    }
     const user = await this.prisma.user.update({
       where: { id },
       data: {
         ...restDto,
+        ...userFound,
         ...(role !== undefined && { role: { set: role } }),
       },
     });
@@ -45,7 +52,16 @@ export class UserService {
     const result: UpdateUserDto = {
       ...rest,
       name: rest.name === null ? undefined : rest.name,
+      phoneNumber: rest.phoneNumber === null ? undefined : rest.phoneNumber,
+      address: rest.address === null ? undefined : rest.address,
+      biography: rest.biography === null ? undefined : rest.biography,
       role: rest.role as UpdateUserDto['role'],
+      dateOfBirth:
+        rest.dateOfBirth === null
+          ? undefined
+          : rest.dateOfBirth instanceof Date
+            ? rest.dateOfBirth.toISOString()
+            : rest.dateOfBirth,
     };
     return result;
   }
