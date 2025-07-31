@@ -26,10 +26,6 @@ export class RegisterDto {
     description: 'Rol del usuario',
     example: 'docente',
   })
-  @Matches(/^(DOCENTE|ADMINISTRADOR)$/, {
-    message:
-      'El rol debe ser uno de los siguientes: docente, estudiante, administrador.',
-  })
   @IsString()
   role?: Role;
 
