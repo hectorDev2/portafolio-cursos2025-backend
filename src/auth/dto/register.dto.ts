@@ -25,9 +25,10 @@ export class RegisterDto {
   @ApiProperty({
     description: 'Rol del usuario',
     example: 'docente',
+    default: Role.DOCENTE, // Default role is DOCENTE
   })
   @IsString()
-  role?: Role;
+  role: Role = Role.DOCENTE;
 
   @ApiProperty({
     description: 'Contraseña del usuario',
