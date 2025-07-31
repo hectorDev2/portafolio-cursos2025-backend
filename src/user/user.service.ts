@@ -49,21 +49,16 @@ export class UserService {
     // Convert name: null to name: undefined for compatibility with UpdateUserDto
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...rest } = user;
-    const result: UpdateUserDto = {
-      ...rest,
-      name: rest.name === null ? undefined : rest.name,
-      phoneNumber: rest.phoneNumber === null ? undefined : rest.phoneNumber,
-      address: rest.address === null ? undefined : rest.address,
-      biography: rest.biography === null ? undefined : rest.biography,
-      role: rest.role as UpdateUserDto['role'],
-      dateOfBirth:
-        rest.dateOfBirth === null
-          ? undefined
-          : rest.dateOfBirth instanceof Date
-            ? rest.dateOfBirth.toISOString()
-            : rest.dateOfBirth,
-    };
-    return result;
+
+    // Convert all null properties to undefined for compatibility with UpdateUserDto
+    const sanitizedUser: UpdateUserDto = Object.fromEntries(
+      Object.entries(rest).map(([key, value]) => [
+        key,
+        value === null ? undefined : value,
+      ]),
+    ) as UpdateUserDto;
+
+    return sanitizedUser;
   }
 
   async getUserById(id: string): Promise<any> {
