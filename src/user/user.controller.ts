@@ -39,7 +39,7 @@ export class UserController {
   }
   //! READ by ID
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.DOCENTE)
+  @Roles(UserRole.DOCENTE, UserRole.ADMINISTRADOR)
   @Get(':id')
   getUserById(@Param('id') id: string) {
     return this.userService.getUserById(id);
