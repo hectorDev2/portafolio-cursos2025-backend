@@ -1,3 +1,5 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsOptional,
   IsEmail,
@@ -5,11 +7,12 @@ import {
   MinLength,
   IsEnum,
   Matches,
+  IsDateString,
 } from 'class-validator';
 import { Role } from 'src/enum/role';
-import { ApiProperty } from '@nestjs/swagger';
+import { CreateUserDto } from './CreateUserDto.dto';
 
-export class UpdateUserDto {
+export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty({
     description: 'Número de teléfono del usuario (opcional)',
     example: '943834699',
@@ -17,6 +20,9 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString({ message: 'El número de teléfono debe ser una cadena de texto.' })
+  @Matches(/^\d{9}$/, {
+    message: 'El número de teléfono debe tener 9 dígitos numéricos.',
+  })
   phoneNumber?: string;
 
   @ApiProperty({
@@ -34,17 +40,24 @@ export class UpdateUserDto {
     required: false,
   })
   @IsOptional()
-  @IsString({ message: 'La fecha de nacimiento debe ser una cadena de texto.' })
+  @IsDateString(
+    {},
+    {
+      message:
+        'La fecha de nacimiento debe ser una fecha válida en formato YYYY-MM-DD.',
+    },
+  )
   dateOfBirth?: string;
 
   @ApiProperty({
     description: 'Biografía del usuario (opcional)',
-    example: 'Hola biografía',
+    example: 'Hola, soy un docente apasionado por la enseñanza.',
     required: false,
   })
   @IsOptional()
   @IsString({ message: 'La biografía debe ser una cadena de texto.' })
   biography?: string;
+
   @ApiProperty({
     description: 'Correo electrónico del usuario (opcional)',
     example: 'new_test@unsaac.edu.pe',
@@ -59,12 +72,16 @@ export class UpdateUserDto {
 
   @ApiProperty({
     description: 'Nueva contraseña del usuario (opcional)',
-    example: 'new_password123',
+    example: 'NewPassword123',
     required: false,
   })
   @IsOptional()
   @IsString({ message: 'La contraseña debe ser una cadena de texto.' })
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+    message:
+      'La contraseña debe contener al menos una letra mayúscula, una minúscula y un número.',
+  })
   password?: string;
 
   @ApiProperty({
@@ -85,6 +102,4 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(Role, { message: 'Rol no válido.' })
   role?: Role;
-
-  // Add any other fields that can be updated, always with @IsOptional()
 }

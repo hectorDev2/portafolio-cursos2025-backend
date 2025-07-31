@@ -16,7 +16,7 @@ export class CreateUserDto {
   })
   @IsEmail({}, { message: 'El correo electrónico debe ser válido.' })
   @IsNotEmpty({ message: 'El correo electrónico es obligatorio.' })
-  email: string; // Corregido: removido el '!'
+  email?: string; // Corregido: removido el '!'
 
   @ApiProperty({
     description: 'Contraseña del usuario',
