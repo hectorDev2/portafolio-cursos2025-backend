@@ -30,22 +30,59 @@ export class UserService {
   }
 
   async updateUser(id: string, updateUserDto: any): Promise<UpdateUserDto> {
-    const { role, ...restDto } = updateUserDto;
+    // Buscar usuario por ID
+    const userFound = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!userFound) {
+      throw new NotFoundException(`Usuario con ID "${id}" no encontrado.`);
+    }
+
+    // Preparar los datos para actualizar
+    const dataToUpdate: any = { ...updateUserDto };
+    // Si el rol está presente, usar la sintaxis de Prisma para set
+    if (updateUserDto.role !== undefined) {
+      dataToUpdate.role = { set: updateUserDto.role };
+    }
+    // Si dateOfBirth es vacío o no existe, poner null
+    if (
+      dataToUpdate.dateOfBirth === '' ||
+      dataToUpdate.dateOfBirth === undefined
+    ) {
+      dataToUpdate.dateOfBirth = null;
+    } else if (
+      typeof dataToUpdate.dateOfBirth === 'string' &&
+      /^\d{4}-\d{2}-\d{2}$/.test(dataToUpdate.dateOfBirth)
+    ) {
+      // Si es string tipo YYYY-MM-DD, convertir a Date
+      dataToUpdate.dateOfBirth = new Date(dataToUpdate.dateOfBirth);
+    }
+    // Eliminar campos undefined
+    Object.keys(dataToUpdate).forEach(
+      (key) => dataToUpdate[key] === undefined && delete dataToUpdate[key],
+    );
+
     const user = await this.prisma.user.update({
       where: { id },
-      data: {
-        ...restDto,
-        ...(role !== undefined && { role: { set: role } }),
-      },
+      data: dataToUpdate,
     });
 
-    // Convert name: null to name: undefined for compatibility with UpdateUserDto
+    // Convertir todos los campos null a undefined para compatibilidad con UpdateUserDto
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...rest } = user;
     const result: UpdateUserDto = {
       ...rest,
-      name: rest.name === null ? undefined : rest.name,
+      name: rest.name ?? undefined,
       role: rest.role as UpdateUserDto['role'],
+      biography: rest.biography ?? undefined,
+      address: rest.address ?? undefined,
+      phoneNumber: rest.phoneNumber ?? undefined,
+      dateOfBirth: rest.dateOfBirth
+        ? rest.dateOfBirth.toISOString()
+        : undefined,
+      lastName: rest.lastName ?? undefined,
+      email: rest.email ?? undefined,
+      password: undefined, // nunca devolver la contraseña
     };
     return result;
   }
