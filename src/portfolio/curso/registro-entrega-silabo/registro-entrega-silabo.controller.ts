@@ -16,7 +16,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { RegistroEntregaSilaboService } from './registro-entrega-silabo.service';
-import { CreateRegistroEntregaSilaboDto } from './dto/create-registro-entrega-silabo.dto';
 import { UpdateRegistroEntregaSilaboDto } from './dto/update-registro-entrega-silabo.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -28,7 +27,7 @@ import { UserRole } from 'src/portfolio/enum/UserRole';
 import { editFileName } from 'src/utils/file-upload.utils';
 
 @ApiTags('Registro Entrega Silabo')
-@Controller('registro-entrega-silabo')
+@Controller('cursos/:cursoId/registro-entrega-silabo')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.DOCENTE)
 export class RegistroEntregaSilaboController {
@@ -46,8 +45,8 @@ export class RegistroEntregaSilaboController {
       }),
     }),
   )
-  create(
-    @Body() createRegistroEntregaSilaboDto: CreateRegistroEntregaSilaboDto,
+  async uploadRegistroEntregaSilabo(
+    @Param('cursoId') cursoId: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -59,10 +58,10 @@ export class RegistroEntregaSilaboController {
     @Req() req: any,
   ) {
     const userId = req.user?.userId;
-    const fileUrl = `/uploads/registro-entrega-silabo/${file.filename}`;
-    return this.registroEntregaSilaboService.create(
-      { ...createRegistroEntregaSilaboDto, fileUrl },
+    return this.registroEntregaSilaboService.uploadRegistroEntregaSilabo(
+      cursoId,
       userId,
+      file,
     );
   }
 

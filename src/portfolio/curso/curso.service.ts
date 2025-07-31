@@ -101,6 +101,11 @@ export class CursoService {
         portfolioId,
         portfolio: { teacherId: userId },
       },
+      include: {
+        avanceCurso: true,
+        silabo: true,
+        registroEntregaSilabo: false,
+      },
     });
   }
 
@@ -114,6 +119,7 @@ export class CursoService {
       include: {
         avanceCurso: true,
         silabo: true,
+        registroEntregaSilabo: true,
       },
     });
     if (!curso) {

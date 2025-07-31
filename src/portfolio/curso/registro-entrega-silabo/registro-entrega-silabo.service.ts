@@ -3,35 +3,48 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateRegistroEntregaSilaboDto } from './dto/create-registro-entrega-silabo.dto';
 import { UpdateRegistroEntregaSilaboDto } from './dto/update-registro-entrega-silabo.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-
 @Injectable()
 export class RegistroEntregaSilaboService {
   constructor(private prisma: PrismaService) {}
 
-  async create(
-    createRegistroEntregaSilaboDto: CreateRegistroEntregaSilaboDto,
+  async uploadRegistroEntregaSilabo(
+    cursoId: string,
     userId: string,
+    file: Express.Multer.File,
   ) {
     const curso = await this.prisma.curso.findUnique({
-      where: { id: createRegistroEntregaSilaboDto.cursoId },
-      include: { portfolio: true },
+      where: { id: cursoId },
+      include: { portfolio: { select: { teacherId: true } } },
     });
-
     if (!curso || curso.portfolio.teacherId !== userId) {
       throw new ForbiddenException(
-        'No tienes permiso para añadir un registro de entrega de sílabo a este curso',
+        'No tienes permiso para subir registro de entrega de sílabo a este curso',
       );
     }
-
-    return this.prisma.registroEntregaSilabo.create({
-      data: {
-        ...createRegistroEntregaSilaboDto,
-        fileUrl: createRegistroEntregaSilaboDto.fileUrl ?? '', // Provide a default or handle as needed
-      },
-    });
+    const fileUrl = `/uploads/registro-entrega-silabo/${file.filename}`;
+    // Verificar si ya existe un registro para este cursoId
+    const registroExistente =
+      await this.prisma.registroEntregaSilabo.findUnique({
+        where: { cursoId },
+      });
+    if (registroExistente) {
+      // Si existe, actualiza el fileUrl
+      return this.prisma.registroEntregaSilabo.update({
+        where: { cursoId },
+        data: { fileUrl },
+      });
+    } else {
+      // Si no existe, crea el registro
+      return this.prisma.registroEntregaSilabo.create({
+        data: {
+          fileUrl,
+          cursoId,
+          // Puedes agregar más campos si es necesario
+        },
+      });
+    }
   }
 
   findAll(userId: string) {
